@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="procurementrefund" to-string-ts="procurementrefund.code" to-string-java="procurementitem.getCode()">
+
+    <code length="8" prefix="PPR" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes" exist-on-table="yes" searchable="yes" width="6" name="procurementitempurchase" label="Purchase" referenced-from="procurementitempurchase" service-method="getAllBasic" to-string-java="procurementitempurchase.getCode()" to-string-ts="procurementitempurchase.code"/>
+        <date-property width="6" name="date" label="Date of Purchased" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+    <group>
+        <decimal-property width="4" name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+        <reference-property required="yes" default-value="1" insertable="no" exist-on-table="yes" searchable="yes" width="4" name="paymentstatus" label="Payment Status" referenced-from="paymentstatus" service-method="getAll" to-string-java="paymentstatus.getName()" to-string-ts="paymentstatus.name"/>
+        <reference-property required="yes" exist-on-table="yes" searchable="yes" width="4" name="paymenttype" label="Payment Type" referenced-from="paymenttype" service-method="getAll" to-string-java="paymenttype.getName()" to-string-ts="paymenttype.name"/>
+    </group>
+
+    <group>
+        <varchar-property pattern="^[0-9]{5,}$" required="yes" width="3" name="chequeno" label="Cheque No" example="" max-length="45"/>
+        <date-property required="yes" width="3" name="chequedate" label="Cheque Date" example="2020/10/02"/>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" required="yes" width="3" name="chequebank" label="Bank" example="Sampath Bank" max-length="45"/>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" required="yes" width="3" name="chequebranch" label="Branch" example="Gampaha" max-length="45"/>
+    </group>
+
+    <multiple-reference-property name="procurementitem" label="Items" to-string-java="procurementitem.getCode()" to-string-ts="procurementitem.code" service-method="getAllBasic" referenced-from="procurementitem" min-count="1" />
+
+    <text-property name="description" label="Description" example=""/>
+</regular-module>
+
+

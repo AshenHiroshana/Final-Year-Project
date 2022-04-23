@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="servicepayment" to-string-ts="servicepayment.code" to-string-java="servicepayment.getCode()">
+
+    <code length="10" prefix="SVSP" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes" exist-on-table="yes" searchable="yes" width="6" name="service" label="Service" referenced-from="service" service-method="getAllBasic" to-string-java="service.getTitle()" to-string-ts="service.title"/>
+        <date-property width="6" name="date" label="Date" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+   <group>
+       <decimal-property width="4" name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+       <reference-property required="yes" default-value="1" insertable="no" exist-on-table="yes" searchable="yes" width="4" name="paymentstatus" label="Payment Status" referenced-from="paymentstatus" live="no" service-method="getAll" to-string-java="paymentstatus.getName()" to-string-ts="paymentstatus.name"/>
+       <reference-property required="yes"  exist-on-table="yes" searchable="yes" width="4" name="paymenttype" label="Payment Type" referenced-from="paymenttype" service-method="getAll" live="no" to-string-java="paymenttype.getName()" to-string-ts="paymenttype.name"/>
+   </group>
+
+    <group>
+      <varchar-property pattern="^[0-9]{5,}$" width="3" name="chequeno" required="yes" label="Cheque No" example="" max-length="45"/>
+      <date-property width="3" name="chequedate" required="yes" label="Cheque Date" example="2020/10/02"/>
+      <varchar-property pattern="^[a-zA-Z ]{3,}$" width="3" name="chequebank" required="yes" label="Bank" example="Sampath Bank" max-length="45"/>
+      <varchar-property pattern="^[a-zA-Z ]{3,}$" width="3" name="chequebranch" required="yes"  label="Branch" example="Gampaha" max-length="45"/>
+    </group>
+
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

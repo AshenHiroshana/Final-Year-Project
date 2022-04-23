@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="consumeitempurchaseconsumeitem_insert"
+         event="AFTER_INSERT" table="consumeitempurchaseconsumeitem">
+    update consumeitem set qty = qty + NEW.qty where id = NEW.consumeitem_id;
+</trigger>

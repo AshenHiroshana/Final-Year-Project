@@ -1,0 +1,197 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change payroll details"></app-no-privilege>
+<div *ngIf="this.payroll && privilege.update">
+  <app-page-header
+    title="Payroll Change Form of {{ payroll.code + ' - ' + payroll.employee.nametitle.name + ' ' + payroll.employee.callingname }}"
+    [breadcrumbSegments]="['Payrolls', 'Show All Payrolls', 'Change Details of ' + payroll.code + ' - ' + payroll.employee.nametitle.name + ' ' + payroll.employee.callingname]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employee</mat-label>
+                <mat-select disabled formControlName="employee" required>
+                  <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.nametitle.name + ' ' + employee.callingname}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="employeeField.invalid">
+                  <span *ngIf="employeeField.errors.required">Select at lease one employee</span>
+                  <span *ngIf="employeeField.errors.server">{{employeeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Appointment</mat-label>
+                <mat-select  disabled formControlName="appointment" required>
+                  <mat-option *ngFor="let appointment of appointments" [value]="appointment.id">{{appointment.code}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="appointmentField.invalid">
+                  <span *ngIf="appointmentField.errors.required">Select at lease one appointment</span>
+                  <span *ngIf="appointmentField.errors.server">{{appointmentField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Basic Salary</mat-label>
+                <input type="number" matInput formControlName="basicsalary" required>
+                <mat-hint>Ex: Rs : 15000</mat-hint>
+                <mat-error *ngIf="basicsalaryField.invalid">
+                  <span *ngIf="basicsalaryField.errors.required">Basic Salary is required</span>
+                  <span *ngIf="basicsalaryField.errors.server">{{basicsalaryField.errors.server.join(', ')}}</span>
+                  <span *ngIf="basicsalaryField.errors.min">Basic Salary should be equal or greater than 0</span>
+                  <span *ngIf="basicsalaryField.errors.max">Basic Salary should be equal or less than 10000000</span>
+                  <span *ngIf="basicsalaryField.errors.pattern">Basic Salary is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Epf Amount</mat-label>
+                <input type="number" matInput formControlName="epfamount" required>
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="epfamountField.invalid">
+                  <span *ngIf="epfamountField.errors.required">Epf Amount is required</span>
+                  <span *ngIf="epfamountField.errors.server">{{epfamountField.errors.server.join(', ')}}</span>
+                  <span *ngIf="epfamountField.errors.min">Epf Amount should be equal or greater than 0</span>
+                  <span *ngIf="epfamountField.errors.max">Epf Amount should be equal or less than 10000000</span>
+                  <span *ngIf="epfamountField.errors.pattern">Epf Amount is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Net Salary</mat-label>
+                <input type="number" matInput formControlName="netsalary" required>
+                <mat-hint>Ex: Rs : 15000</mat-hint>
+                <mat-error *ngIf="netsalaryField.invalid">
+                  <span *ngIf="netsalaryField.errors.required">Net Salary is required</span>
+                  <span *ngIf="netsalaryField.errors.server">{{netsalaryField.errors.server.join(', ')}}</span>
+                  <span *ngIf="netsalaryField.errors.min">Net Salary should be equal or greater than 0</span>
+                  <span *ngIf="netsalaryField.errors.max">Net Salary should be equal or less than 10000000</span>
+                  <span *ngIf="netsalaryField.errors.pattern">Net Salary is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Pay Date</mat-label>
+                <input matInput [matDatepicker]="pickerpaydate" formControlName="paydate" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerpaydate"></mat-datepicker-toggle>
+                <mat-datepicker #pickerpaydate></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="paydateField.invalid">
+                  <span *ngIf="paydateField.errors.required">Pay Date is required</span>
+                  <span *ngIf="paydateField.errors.server">{{paydateField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Allowances</mat-label>
+                <input (keyup)="salaryCalculation()" type="number" matInput formControlName="alowances" required>
+                <mat-hint>Ex: Rs : 15000</mat-hint>
+                <mat-error *ngIf="netsalaryField.invalid">
+                  <span *ngIf="alowancesField.errors.required">Allowances is required</span>
+                  <span *ngIf="alowancesField.errors.server">{{netsalaryField.errors.server.join(', ')}}</span>
+                  <span *ngIf="alowancesField.errors.min">Allowances should be equal or greater than 0</span>
+                  <span *ngIf="alowancesField.errors.max">Allowances should be equal or less than 10000000</span>
+                  <span *ngIf="alowancesField.errors.pattern">Allowances is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Account Number</mat-label>
+                <input matInput formControlName="bankaccountno" required>
+                <mat-hint>Ex: 17005524665942</mat-hint>
+                <mat-error *ngIf="bankaccountnoField.invalid">
+                  <span *ngIf="bankaccountnoField.errors.required">Account Number is required</span>
+                  <span *ngIf="bankaccountnoField.errors.server">{{bankaccountnoField.errors.server.join(', ')}}</span>
+                  <span *ngIf="bankaccountnoField.errors.minlength">Account Number should has at least null characters. </span>
+                  <span *ngIf="bankaccountnoField.errors.maxlength">Account Number can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Bank</mat-label>
+                <input matInput formControlName="bankname" required>
+                <mat-hint>Ex: Sampath Bank</mat-hint>
+                <mat-error *ngIf="banknameField.invalid">
+                  <span *ngIf="banknameField.errors.required">Bank is required</span>
+                  <span *ngIf="banknameField.errors.server">{{banknameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="banknameField.errors.minlength">Bank should has at least null characters. </span>
+                  <span *ngIf="banknameField.errors.maxlength">Bank can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch</mat-label>
+                <input matInput formControlName="bankbranch" required>
+                <mat-hint>Ex: Branch</mat-hint>
+                <mat-error *ngIf="bankbranchField.invalid">
+                  <span *ngIf="bankbranchField.errors.required">Branch is required</span>
+                  <span *ngIf="bankbranchField.errors.server">{{bankbranchField.errors.server.join(', ')}}</span>
+                  <span *ngIf="bankbranchField.errors.minlength">Branch should has at least null characters. </span>
+                  <span *ngIf="bankbranchField.errors.maxlength">Branch can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Addition</h3>
+          <app-payrolladdition-update-sub-form (ngModelChange)="salaryCalculation()" [min]="0" [max]="0" formControlName="payrolladditions"></app-payrolladdition-update-sub-form>
+          <div class="error-box" *ngIf="payrolladditionsField.invalid && !payrolladditionsField.pristine">
+            <p *ngIf="payrolladditionsField.errors.min">Should has at least 0 addition</p>
+            <p *ngIf="payrolladditionsField.errors.max">Maximum allowed only 0 Addition</p>
+                <span *ngIf="payrolladditionsField.errors.server">{{payrolladditionsField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Deduction</h3>
+          <app-payrolldeduction-update-sub-form (ngModelChange)="salaryCalculation()" [min]="0" [max]="0" formControlName="payrolldeductions"></app-payrolldeduction-update-sub-form>
+          <div class="error-box" *ngIf="payrolldeductionsField.invalid && !payrolldeductionsField.pristine">
+            <p *ngIf="payrolldeductionsField.errors.min">Should has at least 0 deduction</p>
+            <p *ngIf="payrolldeductionsField.errors.max">Maximum allowed only 0 Deduction</p>
+                <span *ngIf="payrolldeductionsField.errors.server">{{payrolldeductionsField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/payrolls" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Payrolls</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

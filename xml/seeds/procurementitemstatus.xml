@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="procurementitemstatus" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="25"/>
+    </properties>
+    <values>
+        <value><data>Just purchased</data></value>
+        <value><data>In use</data></value>
+        <value><data>Not in used</data></value>
+        <value><data>Maintaining</data></value>
+        <value><data>Repairing</data></value>
+        <value><data>Auctioned</data></value>
+        <value><data>Disposed</data></value>
+    </values>
+</seed>
+

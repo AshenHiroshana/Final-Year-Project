@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="billpayment" to-string-ts="billpayment.code" to-string-java="billpayment.getCode()">
+
+    <code length="8" prefix="BP" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes" exist-on-table="yes" searchable="yes" width="4" name="billpaymenttype" label="Type" referenced-from="billpaymenttype" service-method="getAll" to-string-java="billpaymenttype.getName()" to-string-ts="billpaymenttype.name"/>
+        <varchar-property width="8" name="title" example="Galle Building Water Bill" label="Title" basic="yes"  min-length="2" required="yes"  />
+    </group>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="4" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <decimal-property width="4" name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+        <date-property width="4" name="date" label="Date of Purchased" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+    <file-property basic="yes" name="photo" label="Photo" accept="image/*" exist-on-table="yes" required="yes"/>
+
+
+    <text-property name="description" label="Description" example=""/>
+
+
+
+
+</regular-module>
+
+
+

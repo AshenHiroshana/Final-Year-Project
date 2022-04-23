@@ -1,0 +1,113 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change branchroleassignment details"></app-no-privilege>
+<div *ngIf="this.branchroleassignment && privilege.update">
+  <app-page-header
+    title="Branchroleassignment Change Form of {{ branchroleassignment.code }}"
+    [breadcrumbSegments]="['Branchroleassignments', 'Show All Branchroleassignments', 'Change Details of ' + branchroleassignment.code]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch</mat-label>
+                <mat-select (selectionChange)="loadData()" formControlName="branch" required>
+                  <mat-option *ngFor="let branch of branches" [value]="branch.id">{{branch.city}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchField.invalid">
+                  <span *ngIf="branchField.errors.required">Select at lease one branch</span>
+                  <span *ngIf="branchField.errors.server">{{branchField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Role</mat-label>
+                <mat-select (selectionChange)="loadData()" formControlName="branchrole" required>
+                  <mat-option *ngFor="let branchrole of branchroles" [value]="branchrole.id">{{branchrole.name + ' (' + branchrole.department.name + ') '}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchroleField.invalid">
+                  <span *ngIf="branchroleField.errors.required">Select at lease one role</span>
+                  <span *ngIf="branchroleField.errors.server">{{branchroleField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employee</mat-label>
+                <mat-select formControlName="employee" required>
+                  <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.code + ' ' +employee.nametitle.name + ' ' + employee.callingname}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="employeeField.invalid">
+                  <span *ngIf="employeeField.errors.required">Select at lease one employee</span>
+                  <span *ngIf="employeeField.errors.server">{{employeeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Granted Date</mat-label>
+                <input matInput [matDatepicker]="pickerdogrant" formControlName="dogrant" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdogrant"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdogrant></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="dograntField.invalid">
+                  <span *ngIf="dograntField.errors.required">Granted Date is required</span>
+                  <span *ngIf="dograntField.errors.server">{{dograntField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="pickerdorevoke" formControlName="dorevoke" >
+                <mat-datepicker-toggle matSuffix [for]="pickerdorevoke"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdorevoke></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="dorevokeField.invalid">
+                  <span *ngIf="dorevokeField.errors.server">{{dorevokeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="branchroleassignmentstatus" required>
+                  <mat-option *ngFor="let branchroleassignmentstatus of branchroleassignmentstatuses" [value]="branchroleassignmentstatus.id">{{branchroleassignmentstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchroleassignmentstatusField.invalid">
+                  <span *ngIf="branchroleassignmentstatusField.errors.required">Select at lease one status</span>
+                  <span *ngIf="branchroleassignmentstatusField.errors.server">{{branchroleassignmentstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Allowance</mat-label>
+                <input type="number" matInput formControlName="allowance" >
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="allowanceField.invalid">
+                  <span *ngIf="allowanceField.errors.server">{{allowanceField.errors.server.join(', ')}}</span>
+                  <span *ngIf="allowanceField.errors.min">Allowance should be equal or greater than 0</span>
+                  <span *ngIf="allowanceField.errors.max">Allowance should be equal or less than 10000000</span>
+                  <span *ngIf="allowanceField.errors.pattern">Allowance is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/branchroleassignments" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Branchroleassignments</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

@@ -1,0 +1,180 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a employee"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !employee" message="Employee Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="employee && privilege.showOne">
+  <app-page-header
+    title="Employee Detail Page of {{ employee.code + ' - ' + employee.nametitle.name + ' ' + employee.callingname }}"
+    [breadcrumbSegments]="['Employees', 'Show All Employees', 'Details of ' + employee.code + ' - ' + employee.nametitle.name + ' ' + employee.callingname]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <img mat-card-image src="{{photo ? photo: './assets/user.jpg'}}">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{employee.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{employee.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(employee.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Employee">
+              <table class="w-100 table-striped custom-data-table">
+                <tbody>
+                <tr>
+                  <th>Code</th>
+                  <td>{{employee.code}}</td>
+                </tr>
+                <tr>
+                  <th>Title</th>
+                  <td>{{employee.nametitle.name}}</td>
+                </tr>
+                <tr>
+                  <th>Calling Name</th>
+                  <td>{{employee.callingname}}</td>
+                </tr>
+                <tr>
+                  <th>Full Name</th>
+                  <td>{{employee.fullname}}</td>
+                </tr>
+                <tr>
+                  <th>Gender</th>
+                  <td>{{employee.gender.name}}</td>
+                </tr>
+                <tr>
+                  <th>Civil Status</th>
+                  <td>{{employee.civilstatus.name}}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>{{employee.employeestatus.name}}</td>
+                </tr>
+                <tr>
+                  <th>Date Of Birth</th>
+                  <td>{{employee.dobirth | date: 'fullDate'}}</td>
+                </tr>
+                <tr>
+                  <th>NIC Number</th>
+                  <td>{{employee.nic}}</td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td [innerHTML]="employee.address | nl2br"></td>
+                </tr>
+                <tr>
+                  <th>Mobile Number</th>
+                  <td>{{employee.mobile}}</td>
+                </tr>
+                <tr *ngIf="employee.land">
+                  <th>Land Number</th>
+                  <td>{{employee.land}}</td>
+                </tr>
+                <tr *ngIf="employee.email">
+                  <th>Email Address</th>
+                  <td>{{employee.email}}</td>
+                </tr>
+                <tr>
+                  <th>Date Of Recruit</th>
+                  <td>{{employee.dorecruit | date: 'fullDate'}}</td>
+                </tr>
+                <tr>
+                  <th>Branch</th>
+                  <td><span class="mat-body badge badge-secondary d-inline-block mr-2 mb-2 font-weight-light py-1 px-3" *ngFor="let branch of employee.branchList">{{branch.city}}</span></td>
+                </tr>
+
+                <tr *ngIf="employee.epfno">
+                  <th>Title</th>
+                  <td>{{employee.epfno}}</td>
+                </tr>
+                <tr *ngIf="employee.doresigned">
+                  <th>Date Of Resigned</th>
+                  <td>{{employee.doresigned | date: 'fullDate'}}</td>
+                </tr>
+                <tr *ngIf="employee.bankaccountno">
+                  <th>Account Number</th>
+                  <td>{{employee.bankaccountno}}</td>
+                </tr>
+                <tr *ngIf="employee.bankname">
+                  <th>Name</th>
+                  <td>{{employee.bankname}}</td>
+                </tr>
+                <tr *ngIf="employee.bankbranch">
+                  <th>Branch</th>
+                  <td>{{employee.bankbranch}}</td>
+                </tr>
+                <tr *ngIf="employee.description">
+                  <th>Description</th>
+                  <td [innerHTML]="employee.description | nl2br"></td>
+                </tr>
+                </tbody>
+              </table>
+            </mat-tab>
+            <mat-tab label="Education">
+              <table class="w-100 custom-data-table">
+                <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>View</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let educationqualification of employee.educationqualificationList">
+                  <td>{{educationqualification.title}}</td>
+                  <td class="btn-col">
+                    <button (click)="pdfViwer(educationqualification.file)" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon> View </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <iframe  [src]="urlSafe" width="100%" height="500px"></iframe>
+            </mat-tab>
+            <mat-tab label="Work Experience">
+              <table class="w-100 custom-data-table">
+                <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>View</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let workexperience of employee.workexperienceList">
+                  <td>{{workexperience.title}}</td>
+                  <td class="btn-col">
+                    <button (click)="pdfViwer(workexperience.file)" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon> View </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+
+              <iframe  [src]="urlSafe" width="100%" height="500px"></iframe>
+
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/employees/edit/{{employee.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/employees/add" mat-stroked-button><mat-icon>add</mat-icon> New Employee</button>
+    <button *ngIf="privilege.showAll" routerLink="/employees" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Employees</button>
+  </div>
+</div>

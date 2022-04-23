@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="appointment" to-string-ts="appointment.code" to-string-java="appointment.getCode()">
+
+    <code length="8" prefix="AP" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property exist-on-table="yes" searchable="yes"  width="4" required="yes" name="designation" label="Designation" referenced-from="designation" service-method="getAllBasic" to-string-java="designation.getName()" to-string-ts="designation.name"/>
+        <reference-property basic="yes" exist-on-table="yes" required="yes" searchable="yes"  width="4" name="employee" label="Employee" referenced-from="employee" service-method="getAllBasic" to-string-java="employee.getNametitle.getName() + #quat; #quat; + employee.getCallingname()" to-string-ts="employee.nametitle.name + ' ' + employee.callingname"/>
+        <reference-property default-value="1" required="yes" live="no" exist-on-table="yes" searchable="yes" insertable="no"  width="4" name="appointmentstatus" label="Status" referenced-from="appointmentstatus" service-method="getAll" to-string-java="appointmentstatus.getName()" to-string-ts="appointmentstatus.name"/>
+    </group>
+
+    <group>
+        <date-property exist-on-table="yes" default-value="1994-12-31" insertable="no" width="6" name="dogrant" required="yes" label="Date Of Granted" example="1994-12-31"/>
+        <date-property insertable="no" width="6" name="dorevoke" label="Date Of Revoke" example="1994-12-31"/>
+    </group>
+
+    <sub-module label="Allowance" name="appointmentallowance" to-string-ts="appointmentallowance.title" to-string-java="appointmentallowance.getTitle()">
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" name="title" label="Title" example="Gampaha HR Manager" searchable="yes" basic="yes" required="yes" exist-on-table="yes"/>
+        <decimal-property  name="amount" label="Amount" example="Rs : 1500" exist-on-table="yes" precision="10" scale="2" required="yes"  min="0" max="10000000"/>
+    </sub-module>
+
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+

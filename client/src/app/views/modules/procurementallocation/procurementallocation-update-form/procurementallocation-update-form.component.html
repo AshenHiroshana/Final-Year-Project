@@ -1,0 +1,69 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change procurementallocation details"></app-no-privilege>
+<div *ngIf="this.procurementallocation && privilege.update">
+  <app-page-header
+    title="Procurementallocation Change Form of {{ procurementallocation.code }}"
+    [breadcrumbSegments]="['Procurementallocations', 'Show All Procurementallocations', 'Change Details of ' + procurementallocation.code]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch Section</mat-label>
+                <mat-select disabled formControlName="branchsection" required>
+                  <mat-option *ngFor="let branchsection of branchsections" [value]="branchsection.id">{{branchsection.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchsectionField.invalid">
+                  <span *ngIf="branchsectionField.errors.required">Select at lease one branch section</span>
+                  <span *ngIf="branchsectionField.errors.server">{{branchsectionField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date of Allocated</mat-label>
+                <input matInput [matDatepicker]="pickerdoallocated" formControlName="doallocated" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdoallocated"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdoallocated></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="doallocatedField.invalid">
+                  <span *ngIf="doallocatedField.errors.required">Date of Allocated is required</span>
+                  <span *ngIf="doallocatedField.errors.server">{{doallocatedField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Items</h3>
+          <app-procurementallocationprocurementitem-update-sub-form [min]="1" [max]="0" formControlName="procurementallocationprocurementitems"></app-procurementallocationprocurementitem-update-sub-form>
+          <div class="error-box" *ngIf="procurementallocationprocurementitemsField.invalid && !procurementallocationprocurementitemsField.pristine">
+            <p *ngIf="procurementallocationprocurementitemsField.errors.min">Should has at least 1 items</p>
+            <p *ngIf="procurementallocationprocurementitemsField.errors.max">Maximum allowed only 0 Items</p>
+                <span *ngIf="procurementallocationprocurementitemsField.errors.server">{{procurementallocationprocurementitemsField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/procurementallocations" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Procurementallocations</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

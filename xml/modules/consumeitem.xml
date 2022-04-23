@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="consumeitem" to-string-ts="consumeitem.code + ' - ' + consumeitem.name" to-string-java="consumeitem.getCode() + #quat; #quat; + consumeitem.getName()">
+
+    <code length="8" prefix="CI" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes" basic="yes" searchable="yes" exist-on-table="yes" width="4" name="consumeitemcategory" label="Category" referenced-from="consumeitemcategory" live="no" service-method="getAll" to-string-java="consumeitemcategory.getName()" to-string-ts="consumeitemcategory.name"/>
+        <varchar-property required="yes" pattern="^[a-zA-Z ]{3,}$" min-length="3" searchable="yes" basic="yes" width="8" name="name" label="Name" exist-on-table="yes"  example="Paracetamol"/>
+    </group>
+
+
+    <group>
+        <reference-property required="yes" width="6" name="unit" label="Unit" referenced-from="unit" live="no" service-method="getAll" to-string-java="unit.getName()" to-string-ts="unit.name"/>
+        <int-property required="yes" width="6" name="qty" label="QTY" example="50" />
+    </group>
+
+    <file-property exist-on-table="yes" name="photo" label="Photo" accept="image/*"/>
+
+    <multiple-reference-property name="vendor" label="Vendor" to-string-java="vendor.getName()" to-string-ts="vendor.name" service-method="getAllBasic" referenced-from="vendor"/>
+
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+

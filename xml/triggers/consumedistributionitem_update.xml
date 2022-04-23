@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="consumedistributionitem_update" event="AFTER_UPDATE" table="consumedistributionitem">
+    DECLARE deference int(10) DEFAULT 0;
+
+    IF OLD.consumeitem_id = NEW.consumeitem_id THEN
+        IF OLD.qty != NEW.qty THEN
+            SET deference = OLD.qty - NEW.qty;
+            update consumeitem set qty = qty + deference where id = NEW.consumeitem_id;
+        END IF;
+    END IF;
+
+    IF OLD.consumeitem_id != NEW.consumeitem_id THEN
+        update consumeitem set qty = qty + OLD.qty where id = OLD.consumeitem_id;
+        update consumeitem set qty = qty - NEW.qty where id = NEW.consumeitem_id;
+    END IF;
+
+</trigger>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="printstatus" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="15"/>
+    </properties>
+    <values>
+        <value><data>Started</data></value>
+        <value><data>Finished</data></value>
+        <value><data>Send</data></value>
+        <value><data>Received</data></value>
+        <value><data>Canceled</data></value>
+    </values>
+</seed>

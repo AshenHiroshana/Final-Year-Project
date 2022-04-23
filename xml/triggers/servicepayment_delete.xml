@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="servicepayment_delete" event="AFTER_DELETE" table="servicepayment">
+    update servicepayment set balance = balance + OLD.amount where id = OLD.service_id;
+
+</trigger>

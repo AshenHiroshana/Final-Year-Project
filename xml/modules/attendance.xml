@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="attendance" to-string-ts="attendance.code" to-string-java="attendance.getCode()">
+
+    <code length="8" prefix="EA" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property exist-on-table="yes" width="6" required="yes" searchable="yes" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <reference-property  basic="yes" width="6" required="yes" searchable="yes" exist-on-table="yes" name="employee" label="Employee" referenced-from="employee" service-method="getAllBasic" to-string-java="employee.getNametitle.getName() + #quat; #quat; + employee.getCallingname()" to-string-ts="employee.nametitle.name + ' ' + employee.callingname"/>
+    </group>
+
+    <group>
+        <date-property exist-on-table="yes"  basic="yes" required="yes" width="4" name="date" label="Date" example="2020/10/02" />
+        <time-property width="4" exist-on-table="yes"  name="in" label="In Time" example="7.30 AM" />
+        <time-property width="4" exist-on-table="yes"  name="out" label="Out Time" example="4.30 PM" />
+    </group>
+
+</regular-module>
+
+

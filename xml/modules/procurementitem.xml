@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="procurementitem" to-string-ts="procurementitem.code" to-string-java="procurementitem.getCode()">
+
+    <code length="8" prefix="PI" exist-on-table="yes"/>
+
+    <group>
+        <reference-property exist-on-table="yes" searchable="yes" width="3" name="vendor" label="Vendor" referenced-from="vendor" service-method="getAllBasic" to-string-java="vendor.getName()" to-string-ts="vendor.name"/>
+        <reference-property width="3" name="procurementitemtype" label="Type" referenced-from="procurementitemtype" service-method="getAllBasic" to-string-ts="procurementitemtype.name" to-string-java="procurementitemtype.getName()" required="yes" exist-on-table="yes" basic="yes" searchable="yes"  />
+        <reference-property width="3" name="procurementitempurchase" label="Purchase" referenced-from="procurementitempurchase" service-method="getAllBasic" to-string-java="procurementitempurchase.getCode()" to-string-ts="procurementitempurchase.code"/>
+        <reference-property width="3" name="buyingcondition" label="Condition" referenced-from="buyingcondition" live="no" service-method="getAll" to-string-ts="buyingcondition.name" to-string-java="buyingcondition.getName()" required="yes" />
+    </group>
+
+    <file-property name="itemphoto" label="Photo" accept="image/*" exist-on-table="yes"/>
+
+    <group>
+        <decimal-property width="6" name="price" label="Price" example="Rs : 1500" precision="10" scale="2" min="0" max="10000000"/>
+        <date-property width="6" name="dopurchased" label="Date of Purchased" example="2020/10/02" exist-on-table="yes"/>
+        <reference-property default-value="1" width="3" name="procurementitemstatus" label="Status" referenced-from="procurementitemstatus" live="no" service-method="getAll" to-string-ts="procurementitemstatus.name" to-string-java="procurementitemstatus.getName()" required="yes" exist-on-table="yes" basic="yes" searchable="yes" insertable="no"  />
+    </group>
+
+    <file-property name="warrantyphoto" label="Warranty Photo" accept="image/*"/>
+
+    <file-property name="invoice" label="Invoice" accept="application/pdf"/>
+
+    <group>
+        <date-property width="4" name="warrantyenddate" label="Date of Warranty End" example="2020/10/02"/>
+        <int-property width="4" name="nooffreeservices" label="Number Of Free Services" example="5" />
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" width="4" name="brand" label="Brand" example="LG" max-length="45"/>
+    </group>
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+

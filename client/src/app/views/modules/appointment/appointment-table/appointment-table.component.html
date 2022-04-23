@@ -1,0 +1,116 @@
+<app-no-privilege *ngIf="!privilege.showAll" message="No privilege to show all appointments"></app-no-privilege>
+<div *ngIf="privilege.showAll">
+  <app-page-header title="Appointments" [breadcrumbSegments]="['Appointments', 'Show All Appointments']"></app-page-header>
+  <div *ngIf="appointmentDataPage!==undefined">
+    <mat-card>
+      <mat-card-content>
+        <div class="mb-2" *ngIf="privilege.add">
+          <button class="mx-0" routerLink="/appointments/add" mat-stroked-button><mat-icon>add</mat-icon> New Appointment</button>
+        </div>
+        <div class="mb-1">
+          <div class="row">
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Code</mat-label>
+                <input matInput [formControl]="codeField" (keyup)="loadData()">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Designation</mat-label>
+                <mat-select [formControl]="designationField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Designation</mat-option>
+                  <mat-option *ngFor="let designation of designations" [value]="designation.id">{{designation.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Employee</mat-label>
+                <mat-select [formControl]="employeeField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Employee</mat-option>
+                  <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.nametitle.name + ' ' + employee.callingname}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Status</mat-label>
+                <mat-select [formControl]="appointmentstatusField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Status</mat-option>
+                  <mat-option *ngFor="let appointmentstatus of appointmentstatuses" [value]="appointmentstatus.id">{{appointmentstatus.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="appointmentDataPage.totalElements > 0">
+          <table mat-table [dataSource]="appointmentDataPage.content" class="w-100">
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>Code</th>
+              <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="designation">
+              <th mat-header-cell *matHeaderCellDef>Designation</th>
+              <td mat-cell *matCellDef="let element"> {{element.designation.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="employee">
+              <th mat-header-cell *matHeaderCellDef>Employee</th>
+              <td mat-cell *matCellDef="let element"> {{element.employee.nametitle.name + ' ' + element.employee.callingname}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="appointmentstatus">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element"> {{element.appointmentstatus.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dogrant">
+              <th mat-header-cell *matHeaderCellDef>Date Of Granted</th>
+              <td mat-cell *matCellDef="let element"> {{element.dogrant | date: 'longDate'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="more-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button routerLink="/appointments/{{element.id}}" class="mat-btn-sm" mat-stroked-button><mat-icon>visibility</mat-icon> More ...</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button (click)="delete(element)" class="mat-btn-sm" mat-flat-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button routerLink="/appointments/edit/{{element.id}}" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <app-empty-data-table message="No appointments to show" *ngIf="appointmentDataPage.totalElements === 0"></app-empty-data-table>
+        <div class="mt-1">
+          <mat-paginator
+            [length]="appointmentDataPage.totalElements"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100]"
+            (page)="paginate($event)"
+            [showFirstLastButtons]="true"
+          >
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

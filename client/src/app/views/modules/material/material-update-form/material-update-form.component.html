@@ -1,0 +1,90 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change material details"></app-no-privilege>
+<div *ngIf="this.material && privilege.update">
+  <app-page-header
+    title="Material Change Form of {{ material.code + ' - ' + material.name }}"
+    [breadcrumbSegments]="['Materials', 'Show All Materials', 'Change Details of ' + material.code + ' - ' + material.name]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-hint>Ex: CS Book 1</mat-hint>
+                <mat-error *ngIf="nameField.invalid">
+                  <span *ngIf="nameField.errors.required">Name is required</span>
+                  <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nameField.errors.minlength">Name should has at least 3 characters. </span>
+                  <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Page Count</mat-label>
+                <input type="number" matInput formControlName="pagecount" required>
+                <mat-hint>Ex: 129</mat-hint>
+                <mat-error *ngIf="pagecountField.invalid">
+                  <span *ngIf="pagecountField.errors.required">Page Count is required</span>
+                  <span *ngIf="pagecountField.errors.server">{{pagecountField.errors.server.join(', ')}}</span>
+                  <span *ngIf="pagecountField.errors.minlength">Page Count should be equal or greater than -2147483648</span>
+                  <span *ngIf="pagecountField.errors.maxlength">Page Count should be equal or less than 2147483647</span>
+                  <span *ngIf="pagecountField.errors.pattern">Page Count is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="materialtype" required>
+                  <mat-option *ngFor="let materialtype of materialtypes" [value]="materialtype.id">{{materialtype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="materialtypeField.invalid">
+                  <span *ngIf="materialtypeField.errors.required">Select at lease one type</span>
+                  <span *ngIf="materialtypeField.errors.server">{{materialtypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="materialstatus" required>
+                  <mat-option *ngFor="let materialstatus of materialstatuses" [value]="materialstatus.id">{{materialstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="materialstatusField.invalid">
+                  <span *ngIf="materialstatusField.errors.required">Select at lease one status</span>
+                  <span *ngIf="materialstatusField.errors.server">{{materialstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>PDF</mat-label>
+            <app-file-chooser placeholder="No choosed pdfs to show" [min]="1" [max]="1" [accept]="['application/pdf']" formControlName="file"></app-file-chooser>
+            <mat-hint>Select any application/pdf file</mat-hint>
+            <mat-error *ngIf="fileField.invalid">
+              <span *ngIf="fileField.errors.server">{{fileField.errors.server.join(', ')}}</span>
+              <span *ngIf="fileField.errors.min">pdf is required</span>
+              <span *ngIf="fileField.errors.max">Maximum allowed pdf count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/materials" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Materials</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

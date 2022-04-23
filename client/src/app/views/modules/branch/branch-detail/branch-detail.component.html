@@ -1,0 +1,114 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a branch"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !branch" message="Branch Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="branch && privilege.showOne">
+  <app-page-header
+    title="Branch Detail Page of {{ branch.code + ' - ' + branch.city }}"
+    [breadcrumbSegments]="['Branches', 'Show All Branches', 'Details of ' + branch.code + ' - ' + branch.city]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <img mat-card-image src="{{photo ? photo: './assets/image.jpg'}}">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{branch.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{branch.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(branch.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <iframe lass="e2e-iframe-trusted-src" width="100%" height="320" [src]="urlSafe" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Branch">
+
+              <table class="w-100 table-striped custom-data-table">
+                <tbody>
+                <tr>
+                  <th>Code</th>
+                  <td>{{branch.code}}</td>
+                </tr>
+                <tr>
+                  <th>City</th>
+                  <td>{{branch.city}}</td>
+                </tr>
+                <tr>
+                  <th>Primary Contact</th>
+                  <td>{{branch.primarycontact}}</td>
+                </tr>
+                <tr *ngIf="branch.secondarycontact">
+                  <th>Secondary Contact</th>
+                  <td>{{branch.secondarycontact}}</td>
+                </tr>
+                <tr *ngIf="branch.fax">
+                  <th>Fax</th>
+                  <td>{{branch.fax}}</td>
+                </tr>
+                <tr *ngIf="branch.email">
+                  <th>Email Address</th>
+                  <td>{{branch.email}}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>{{branch.branchstatus.name}}</td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td [innerHTML]="branch.address | nl2br"></td>
+                </tr>
+                <tr *ngIf="branch.description">
+                  <th>Description</th>
+                  <td [innerHTML]="branch.description | nl2br"></td>
+                </tr>
+                </tbody>
+              </table>
+
+            </mat-tab>
+            <mat-tab label="Branch Plans">
+
+              <mat-card class="example-card">
+                <mat-card-content>
+
+                  <table class="w-100 table-striped custom-data-table">
+
+                    <tbody>
+                    <tr *ngFor="let photo of photos">
+                      <th>
+                        <img width="100%" height="350px;" src="{{photo}}"/>
+                      </th>
+                    </tr>
+                    </tbody>
+                  </table>
+
+                </mat-card-content>
+              </mat-card>
+
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/branches/edit/{{branch.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/branches/add" mat-stroked-button><mat-icon>add</mat-icon> New Branch</button>
+    <button *ngIf="privilege.showAll" routerLink="/branches" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Branches</button>
+  </div>
+</div>

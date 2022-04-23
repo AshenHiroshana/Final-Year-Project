@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="servicetype" to-string-ts="servicetype.code + ' - ' + servicetype.name" to-string-java="servicetype.getCode() + #quat; - #quat; + servicetype.getName()">
+
+    <code length="8" prefix="ST" searchable="yes" exist-on-table="yes"/>
+
+    <varchar-property width="6" pattern="^[a-zA-Z ]{3,}$" basic="yes" exist-on-table="yes" searchable="yes" required="yes" name="name" label="Name" example="A/C"/>
+    <multiple-reference-property name="vendor" label="Vendor" to-string-java="vendor.getName()" to-string-ts="vendor.name" service-method="getAllBasic" referenced-from="vendor" min-count="1" />
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+

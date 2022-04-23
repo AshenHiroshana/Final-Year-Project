@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="print_insert" event="AFTER_INSERT" table="print">
+
+        update printorder set printorderstatus_id = 2 where id = NEW.printorder_id;
+
+</trigger>

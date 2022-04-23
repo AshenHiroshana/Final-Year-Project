@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="print_delete" event="AFTER_DELETE" table="print">
+    update printorder set printorderstatus_id = 1 where id = OLD.printorder_id;
+</trigger>

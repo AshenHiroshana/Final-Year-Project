@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="auction" to-string-ts="auction.code" to-string-java="auction.getCode()">
+
+    <code length="8" prefix="AU" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" searchable="yes" width="8" name="buyer" example="Mr. Nimal Perera" label="Buyer" basic="yes" exist-on-table="yes" min-length="2" required="yes"  />
+        <reference-property required="yes" exist-on-table="yes" width="4" name="procurementitem" label="Item" referenced-from="procurementitem" service-method="getAll" to-string-java="procurementitem.getCode()" to-string-ts="procurementitem.code"/>
+    </group>
+
+    <group>
+        <decimal-property width="6" name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+        <date-property width="6" name="date" label="Date of Purchased" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

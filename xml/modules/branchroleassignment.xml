@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="branchroleassignment" to-string-ts="branchroleassignment.code" to-string-java="branchroleassignment.getCode()">
+
+    <code length="10" prefix="BRRA" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property basic="yes" width="4" required="yes" searchable="yes" exist-on-table="yes" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <reference-property basic="yes" width="4" required="yes" exist-on-table="yes" name="branchrole" label="Role" referenced-from="branchrole" service-method="getAllBasic" to-string-java="branchrole.getName() + #quat; (#quat; + branchrole.getDepartment().getName() + #quat;) #quat;" to-string-ts="branchrole.name + ' (' + branchrole.department.name + ') '"/>
+        <reference-property width="4" required="yes" searchable="yes" exist-on-table="yes" name="employee" label="Employee" referenced-from="employee" service-method="getAllBasic" to-string-java="employee.getNametitle.getName() + #quat; #quat; + employee.getCallingname()" to-string-ts="employee.nametitle.name + ' ' + employee.callingname"/>
+    </group>
+
+    <group>
+        <date-property required="yes" width="3" name="dogrant" label="Granted Date" example="2020/10/02" />
+        <date-property width="3" name="dorevoke" label="End Date" example="2020/10/02" />
+        <reference-property width="3" insertable="no" default-value="1" required="yes" searchable="yes" exist-on-table="yes" name="branchroleassignmentstatus" label="Status" referenced-from="branchroleassignmentstatus" service-method="getAll" to-string-java="branchroleassignmentstatus.getName()" to-string-ts="branchroleassignmentstatus.name"/>
+        <decimal-property width="3"  name="allowance" label="Allowance" example="Rs : 1500" precision="10" scale="2"  min="0" max="10000000"/>
+    </group>
+
+
+</regular-module>
+
+

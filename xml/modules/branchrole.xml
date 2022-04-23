@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="branchrole" to-string-ts="branchrole.code + ' - ' + branchrole.name" to-string-java="branchrole.getCode() + #quat; #quat; + branchrole.getName()">
+
+    <code length="8" prefix="BRR" exist-on-table="yes"/>
+
+    <group>
+        <reference-property  width="4" required="yes" searchable="yes" exist-on-table="yes" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" min-length="3" required="yes" searchable="yes" basic="yes" width="8" name="name" label="Name" exist-on-table="yes"  example="Administration Manager"/>
+    </group>
+
+    <group>
+        <int-property width="4" name="min" label="Min" example="1" required="yes"/>
+        <int-property width="4" name="max" label="Max" example="1" required="yes"/>
+        <reference-property insertable="no" default-value="1" searchable="yes" exist-on-table="yes" required="yes" width="4" name="branchrolestatus" label="Status" referenced-from="branchrolestatus" service-method="getAll" to-string-java="branchrolestatus.getName()" to-string-ts="branchrolestatus.name"/>
+    </group>
+
+    <group>
+        <decimal-property width="6" name="allowance" label="Allowance" example="Rs : 1500" precision="10" scale="2"   min="0" max="10000000"/>
+        <reference-property basic="yes" required="yes" exist-on-table="yes" searchable="yes" width="6" name="department" label="Department" referenced-from="department" service-method="getAll" to-string-java="department.getName()" to-string-ts="department.name"/>
+    </group>
+
+</regular-module>
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="allocationstatus" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="10"/>
+    </properties>
+    <values>
+        <value><data>Allocated</data></value>
+        <value><data>Deallocate</data></value>
+    </values>
+</seed>

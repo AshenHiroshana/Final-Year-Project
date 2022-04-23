@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="branchsection" to-string-ts="branchsection.code + ' - ' + branchsection.name" to-string-java="branchsection.getCode() + #quat; - #quat; + branch.getName()">
+
+    <code length="8" prefix="BRS" searchable="yes" exist-on-table="yes"/>
+    <group>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" name="name" example="Galle Reception 01" label="Name" basic="yes" exist-on-table="yes" min-length="2" max-length="45" required="yes"  />
+    </group>
+
+    <group>
+        <reference-property width="4" required="yes" default-value="1" insertable="no" searchable="yes" exist-on-table="yes" name="branchsectionstatus" label="Status" referenced-from="branchsectionstatus" live="no" service-method="getAll" to-string-java="branchsectionstatus.getName()" to-string-ts="branchsectionstatus.name"/>
+        <reference-property width="4" required="yes" searchable="yes" exist-on-table="yes" name="branchsectiontype" label="Type" referenced-from="branchsectiontype" service-method="getAll" live="no" to-string-java="branchsectiontype.getName()" to-string-ts="branchsectiontype.name"/>
+        <reference-property width="4" required="yes" searchable="yes" exist-on-table="yes" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+    </group>
+
+    <file-property name="photo" label="Photo" accept="image/*" exist-on-table="yes"/>
+    <file-property name="areaplan" label="Area Plan" accept="image/*"/>
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

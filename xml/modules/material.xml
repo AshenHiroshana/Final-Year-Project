@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="material" to-string-ts="material.code + ' - ' + material.name" to-string-java="material.getCode() + #quat; - #quat; + material.getName()">
+
+    <code length="8" prefix="ME" exist-on-table="yes"/>
+
+
+    <group>
+        <varchar-property basic="yes" exist-on-table="yes" searchable="yes" required="yes" name="name" label="Name" example="CS Book 1" min-length="3" pattern=""/>
+    </group>
+
+    <group>
+        <int-property width="4" name="pagecount" label="Page Count" example="129" searchable="yes" exist-on-table="yes" required="yes" />
+        <reference-property exist-on-table="yes" searchable="yes" required="yes"  width="4" name="materialtype" label="Type" referenced-from="materialtype" service-method="getAll" to-string-java="materialtype.getName()" to-string-ts="materialtype.name"/>
+        <reference-property insertable="no" default-value="1" exist-on-table="yes" searchable="yes" required="yes"  width="4" name="materialstatus" label="Status" referenced-from="materialstatus" service-method="getAll" to-string-java="materialstatus.getName()" to-string-ts="materialstatus.name"/>
+    </group>
+
+    <file-property basic="yes" name="file" label="PDF" accept="application/pdf" exist-on-table="yes" required="yes"/>
+
+
+</regular-module>
+
+

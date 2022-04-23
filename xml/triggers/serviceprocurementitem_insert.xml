@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="serviceprocurementitem_insert" event="AFTER_INSERT" table="serviceprocurementitem">
+    update procurementitem
+    set procurementitemstatus_id = IF(procurementitemstatus_id=2, 4, 5)
+    where id = NEW.procurementitem_id;
+</trigger>

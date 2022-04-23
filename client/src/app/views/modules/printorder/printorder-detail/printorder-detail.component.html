@@ -1,0 +1,82 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a printorder"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !printorder" message="Printorder Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="printorder && privilege.showOne">
+  <app-page-header
+    title="Printorder Detail Page of {{ printorder.code }}"
+    [breadcrumbSegments]="['Printorders', 'Show All Printorders', 'Details of ' + printorder.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{printorder.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{printorder.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(printorder.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{printorder.code}}</td>
+              </tr>
+              <tr>
+                <th>Branch</th>
+                <td>{{printorder.branch.city}}</td>
+              </tr>
+              <tr>
+                <th>Material</th>
+                <td>{{printorder.material.code + ' - ' + printorder.material.name}}</td>
+              </tr>
+              <tr>
+                <th>QTY</th>
+                <td>{{printorder.qty}}</td>
+              </tr>
+              <tr>
+                <th>Ordered Date</th>
+                <td>{{printorder.ordereddate | date: 'fullDate'}}</td>
+              </tr>
+              <tr>
+                <th>Required Date</th>
+                <td>{{printorder.requireddate | date: 'fullDate'}}</td>
+              </tr>
+              <tr *ngIf="printorder.receiveddate">
+                <th>Received Date</th>
+                <td>{{printorder.receiveddate | date: 'fullDate'}}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{printorder.printorderstatus.name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/printorders/edit/{{printorder.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/printorders/add" mat-stroked-button><mat-icon>add</mat-icon> New Printorder</button>
+    <button *ngIf="privilege.showAll" routerLink="/printorders" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Printorders</button>
+  </div>
+</div>

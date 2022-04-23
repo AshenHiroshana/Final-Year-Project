@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="procurementallocation" to-string-ts="procurementallocation.code" to-string-java="procurementallocation.getCode()">
+
+    <code length="8" prefix="PIA" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="6" name="branchsection" label="Branch Section" referenced-from="branchsection" service-method="getAllBasic" to-string-java="branchsection.getName()" to-string-ts="branchsection.name"/>
+        <date-property width="6" name="doallocated" label="Date of Allocated" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+    <sub-module label="Items" min="1"  name="procurementallocationprocurementitem" to-string-ts="procurementallocationprocurementitem.procurementitem.code" to-string-java="procurementallocationprocurementitem.getProcurementitem().getCode()">
+        <date-property required="yes" default-value="1994-12-31" width="6" name="dodeallocate" label="Date of Deallocate" example="2020/10/02" exist-on-table="yes" insertable="no"/>
+        <reference-property required="yes" name="procurementitem" label="Item" referenced-from="procurementitem" service-method="getAllBasic" to-string-java="procurementitem.getCode()" to-string-ts="procurementitem.code"/>
+        <reference-property required="yes" insertable="no" default-value="1" width="6" searchable="yes" exist-on-table="yes" name="allocationstatus" label="Status" referenced-from="allocationstatus" service-method="getAll" to-string-java="allocationstatus.getName()" to-string-ts="allocationstatus.name"/>
+    </sub-module>
+
+
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+

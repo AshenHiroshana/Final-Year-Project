@@ -1,0 +1,96 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a appointment"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !appointment" message="Appointment Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="appointment && privilege.showOne">
+  <app-page-header
+    title="Appointment Detail Page of {{ appointment.code }}"
+    [breadcrumbSegments]="['Appointments', 'Show All Appointments', 'Details of ' + appointment.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{appointment.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{appointment.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(appointment.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{appointment.code}}</td>
+              </tr>
+              <tr>
+                <th>Designation</th>
+                <td>{{appointment.designation.name}}</td>
+              </tr>
+              <tr>
+                <th>Employee</th>
+                <td>{{appointment.employee.nametitle.name + ' ' + appointment.employee.callingname}}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{appointment.appointmentstatus.name}}</td>
+              </tr>
+              <tr>
+                <th>Date Of Granted</th>
+                <td>{{appointment.dogrant | date: 'fullDate'}}</td>
+              </tr>
+              <tr *ngIf="appointment.dorevoke">
+                <th>Date Of Revoke</th>
+                <td>{{appointment.dorevoke | date: 'fullDate'}}</td>
+              </tr>
+                  <tr>
+                    <td colspan="2">
+                      <table class="w-100 custom-data-table">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let appointmentallowance of appointment.appointmentallowanceList">
+                            <td>{{appointmentallowance.title}}</td>
+                            <td>{{appointmentallowance.amount}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+              <tr *ngIf="appointment.description">
+                <th>Description</th>
+                <td [innerHTML]="appointment.description | nl2br"></td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/appointments/edit/{{appointment.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/appointments/add" mat-stroked-button><mat-icon>add</mat-icon> New Appointment</button>
+    <button *ngIf="privilege.showAll" routerLink="/appointments" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Appointments</button>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change procurementitemtype details"></app-no-privilege>
+<div *ngIf="this.procurementitemtype && privilege.update">
+  <app-page-header
+    title="Procurementitemtype Change Form of {{ procurementitemtype.code+ ' - ' + procurementitemtype.name }}"
+    [breadcrumbSegments]="['Procurementitemtypes', 'Show All Procurementitemtypes', 'Change Details of ' + procurementitemtype.code+ ' - ' + procurementitemtype.name]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-hint>Ex: A/C Repair</mat-hint>
+            <mat-error *ngIf="nameField.invalid">
+              <span *ngIf="nameField.errors.required">Name is required</span>
+              <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+              <span *ngIf="nameField.errors.minlength">Name should has at least null characters. </span>
+              <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+              <span *ngIf="nameField.errors.pattern">Name is invalid.</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vendor</mat-label>
+            <app-dual-listbox [min]="1"  placeholder="Add Vendor To Here" [sourceData]="vendors" formControlName="vendors"></app-dual-listbox>
+            <mat-error *ngIf="vendorsField.invalid">
+              <span *ngIf="vendorsField.errors.min">Select at lease 1 Vendor</span>
+              <span *ngIf="vendorsField.errors.server">{{vendorsField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/procurementitemtypes" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Procurementitemtypes</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

@@ -1,0 +1,122 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change branchrole details"></app-no-privilege>
+<div *ngIf="this.branchrole && privilege.update">
+  <app-page-header
+    title="Branchrole Change Form of {{ branchrole.code + ' - ' + branchrole.name }}"
+    [breadcrumbSegments]="['Branchroles', 'Show All Branchroles', 'Change Details of ' + branchrole.code + ' - ' + branchrole.name]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch</mat-label>
+                <mat-select formControlName="branch" required>
+                  <mat-option *ngFor="let branch of branches" [value]="branch.id">{{branch.city}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchField.invalid">
+                  <span *ngIf="branchField.errors.required">Select at lease one branch</span>
+                  <span *ngIf="branchField.errors.server">{{branchField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-hint>Ex: Administration Manager</mat-hint>
+                <mat-error *ngIf="nameField.invalid">
+                  <span *ngIf="nameField.errors.required">Name is required</span>
+                  <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nameField.errors.minlength">Name should has at least 3 characters. </span>
+                  <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+                  <span *ngIf="nameField.errors.pattern">Name is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Min</mat-label>
+                <input type="number" matInput formControlName="min" required>
+                <mat-hint>Ex: 1</mat-hint>
+                <mat-error *ngIf="minField.invalid">
+                  <span *ngIf="minField.errors.required">Min is required</span>
+                  <span *ngIf="minField.errors.server">{{minField.errors.server.join(', ')}}</span>
+                  <span *ngIf="minField.errors.minlength">Min should be equal or greater than -2147483648</span>
+                  <span *ngIf="minField.errors.maxlength">Min should be equal or less than 2147483647</span>
+                  <span *ngIf="minField.errors.pattern">Min is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Max</mat-label>
+                <input type="number" matInput formControlName="max" required>
+                <mat-hint>Ex: 1</mat-hint>
+                <mat-error *ngIf="maxField.invalid">
+                  <span *ngIf="maxField.errors.required">Max is required</span>
+                  <span *ngIf="maxField.errors.server">{{maxField.errors.server.join(', ')}}</span>
+                  <span *ngIf="maxField.errors.minlength">Max should be equal or greater than -2147483648</span>
+                  <span *ngIf="maxField.errors.maxlength">Max should be equal or less than 2147483647</span>
+                  <span *ngIf="maxField.errors.pattern">Max is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="branchrolestatus" required>
+                  <mat-option *ngFor="let branchrolestatus of branchrolestatuses" [value]="branchrolestatus.id">{{branchrolestatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchrolestatusField.invalid">
+                  <span *ngIf="branchrolestatusField.errors.required">Select at lease one status</span>
+                  <span *ngIf="branchrolestatusField.errors.server">{{branchrolestatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Allowance</mat-label>
+                <input type="number" matInput formControlName="allowance" >
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="allowanceField.invalid">
+                  <span *ngIf="allowanceField.errors.server">{{allowanceField.errors.server.join(', ')}}</span>
+                  <span *ngIf="allowanceField.errors.min">Allowance should be equal or greater than 0</span>
+                  <span *ngIf="allowanceField.errors.max">Allowance should be equal or less than 10000000</span>
+                  <span *ngIf="allowanceField.errors.pattern">Allowance is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department" required>
+                  <mat-option *ngFor="let department of departments" [value]="department.id">{{department.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="departmentField.invalid">
+                  <span *ngIf="departmentField.errors.required">Select at lease one department</span>
+                  <span *ngIf="departmentField.errors.server">{{departmentField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/branchroles" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Branchroles</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

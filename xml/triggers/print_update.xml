@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="print_update" event="AFTER_UPDATE" table="print">
+
+    IF NEW.printorder_id != OLD.printorder_id THEN
+        update printorder set printorderstatus_id = 1 where id = OLD.printorder_id;
+    END IF;
+
+    IF NEW.printstatus_id = 1 THEN
+        update printorder set printorderstatus_id = 2 where id = NEW.printorder_id;
+    END IF;
+
+    IF NEW.printstatus_id = 2 THEN
+        update printorder set printorderstatus_id = 3 where id = NEW.printorder_id;
+    END IF;
+
+    IF NEW.printstatus_id = 3 THEN
+        update printorder set printorderstatus_id = 4 where id = NEW.printorder_id;
+    END IF;
+
+    IF NEW.printstatus_id = 4 THEN
+        update printorder set printorderstatus_id = 5 where id = NEW.printorder_id;
+    END IF;
+
+    IF NEW.printstatus_id = 5 THEN
+        update printorder set printorderstatus_id = 1 where id = NEW.printorder_id;
+    END IF;
+
+
+</trigger>

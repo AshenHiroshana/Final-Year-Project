@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="paymenttype" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="10"/>
+    </properties>
+    <values>
+        <value><data>Cash</data></value>
+        <value><data>Cheque</data></value>
+    </values>
+</seed>

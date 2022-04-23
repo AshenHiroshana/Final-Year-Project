@@ -1,0 +1,188 @@
+<app-no-privilege message="No privilege to add new procurementitem" *ngIf="!privilege.add"></app-no-privilege>
+<div *ngIf="privilege.add">
+  <app-page-header title="Procurementitem Form" [breadcrumbSegments]="['Procurementitems', 'Add New Procurementitem']"></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Vendor</mat-label>
+                <mat-select (selectionChange)="filteredDataList(); vendorField.disable()" formControlName="vendor" >
+                  <mat-option *ngFor="let vendor of vendors" [value]="vendor.id">{{vendor.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="vendorField.invalid">
+                  <span *ngIf="vendorField.errors.server">{{vendorField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="procurementitemtype" required>
+                  <mat-option *ngFor="let procurementitemtype of procurementitemtypes" [value]="procurementitemtype.id">{{procurementitemtype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="procurementitemtypeField.invalid">
+                  <span *ngIf="procurementitemtypeField.errors.required">Select at lease one type</span>
+                  <span *ngIf="procurementitemtypeField.errors.server">{{procurementitemtypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Purchase</mat-label>
+                <mat-select formControlName="procurementitempurchase" >
+                  <mat-option *ngFor="let procurementitempurchase of procurementitempurchases" [value]="procurementitempurchase.id">{{procurementitempurchase.code}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="procurementitempurchaseField.invalid">
+                  <span *ngIf="procurementitempurchaseField.errors.server">{{procurementitempurchaseField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Condition</mat-label>
+                <mat-select formControlName="buyingcondition" required>
+                  <mat-option *ngFor="let buyingcondition of buyingconditions" [value]="buyingcondition.id">{{buyingcondition.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="buyingconditionField.invalid">
+                  <span *ngIf="buyingconditionField.errors.required">Select at lease one condition</span>
+                  <span *ngIf="buyingconditionField.errors.server">{{buyingconditionField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Photo</mat-label>
+            <app-file-chooser placeholder="No choosed photos to show" [min]="0" [max]="1" [accept]="['image/*']" formControlName="itemphoto"></app-file-chooser>
+            <mat-hint>Select any image/* file</mat-hint>
+            <mat-error *ngIf="itemphotoField.invalid">
+              <span *ngIf="itemphotoField.errors.server">{{itemphotoField.errors.server.join(', ')}}</span>
+              <span *ngIf="itemphotoField.errors.min">photo is required</span>
+              <span *ngIf="itemphotoField.errors.max">Maximum allowed photo count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Price</mat-label>
+                <input type="number" matInput formControlName="price" >
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="priceField.invalid">
+                  <span *ngIf="priceField.errors.server">{{priceField.errors.server.join(', ')}}</span>
+                  <span *ngIf="priceField.errors.min">Price should be equal or greater than 0</span>
+                  <span *ngIf="priceField.errors.max">Price should be equal or less than 10000000</span>
+                  <span *ngIf="priceField.errors.pattern">Price is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date of Purchased</mat-label>
+                <input [max]="dateVaidation()" matInput [matDatepicker]="pickerdopurchased" formControlName="dopurchased" >
+                <mat-datepicker-toggle matSuffix [for]="pickerdopurchased"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdopurchased></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="dopurchasedField.invalid">
+                  <span *ngIf="dopurchasedField.errors.server">{{dopurchasedField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Warranty Photo</mat-label>
+            <app-file-chooser placeholder="No choosed warranty photos to show" [min]="0" [max]="1" [accept]="['image/*']" formControlName="warrantyphoto"></app-file-chooser>
+            <mat-hint>Select any image/* file</mat-hint>
+            <mat-error *ngIf="warrantyphotoField.invalid">
+              <span *ngIf="warrantyphotoField.errors.server">{{warrantyphotoField.errors.server.join(', ')}}</span>
+              <span *ngIf="warrantyphotoField.errors.min">warranty photo is required</span>
+              <span *ngIf="warrantyphotoField.errors.max">Maximum allowed warranty photo count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Invoice</mat-label>
+            <app-file-chooser placeholder="No choosed invoices to show" [min]="0" [max]="1" [accept]="['application/pdf']" formControlName="invoice"></app-file-chooser>
+            <mat-hint>Select any application/pdf file</mat-hint>
+            <mat-error *ngIf="invoiceField.invalid">
+              <span *ngIf="invoiceField.errors.server">{{invoiceField.errors.server.join(', ')}}</span>
+              <span *ngIf="invoiceField.errors.min">invoice is required</span>
+              <span *ngIf="invoiceField.errors.max">Maximum allowed invoice count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date of Warranty End</mat-label>
+                <input [min]="dateVaidation()" matInput [matDatepicker]="pickerwarrantyenddate" formControlName="warrantyenddate" >
+                <mat-datepicker-toggle matSuffix [for]="pickerwarrantyenddate"></mat-datepicker-toggle>
+                <mat-datepicker #pickerwarrantyenddate></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="warrantyenddateField.invalid">
+                  <span *ngIf="warrantyenddateField.errors.server">{{warrantyenddateField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Number Of Free Services</mat-label>
+                <input type="number" matInput formControlName="nooffreeservices" >
+                <mat-hint>Ex: 5</mat-hint>
+                <mat-error *ngIf="nooffreeservicesField.invalid">
+                  <span *ngIf="nooffreeservicesField.errors.server">{{nooffreeservicesField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nooffreeservicesField.errors.minlength">Number Of Free Services should be equal or greater than -2147483648</span>
+                  <span *ngIf="nooffreeservicesField.errors.maxlength">Number Of Free Services should be equal or less than 2147483647</span>
+                  <span *ngIf="nooffreeservicesField.errors.pattern">Number Of Free Services is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Brand</mat-label>
+                <input matInput formControlName="brand" >
+                <mat-hint>Ex: LG</mat-hint>
+                <mat-error *ngIf="brandField.invalid">
+                  <span *ngIf="brandField.errors.server">{{brandField.errors.server.join(', ')}}</span>
+                  <span *ngIf="brandField.errors.minlength">Brand should has at least null characters. </span>
+                  <span *ngIf="brandField.errors.maxlength">Brand can have a maximum of 45 characters. </span>
+                  <span *ngIf="brandField.errors.pattern">Brand is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/procurementitems" class="ml-0" mat-flat-button color="primary"><mat-icon>list</mat-icon> All Procurementitems</button>
+          <span class="spacer"></span>
+          <button (click)="vendorField.enable()" mat-stroked-button type="reset"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="right">
+        <span class="text-warning">*</span> Required Fields
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

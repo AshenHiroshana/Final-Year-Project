@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="consumeitempayment_update" event="AFTER_UPDATE" table="consumeitempayment">
+    DECLARE deference decimal(10,2) DEFAULT 0;
+
+        IF OLD.amount != NEW.amount THEN
+            SET deference = OLD.amount - NEW.amount;
+            update consumeitempurchase set balance = balance + deference where id = NEW.consumeitempurchase_id;
+        END IF;
+
+        IF OLD.paymentstatus_id = 2 AND NEW.paymentstatus_id = 3 THEN
+            update consumeitempurchase set balance = balance + NEW.amount where id = NEW.consumeitempurchase_id;
+        END IF;
+
+        IF OLD.paymentstatus_id = 3 AND NEW.paymentstatus_id = 2 THEN
+            update consumeitempurchase set balance = balance - NEW.amount where id = NEW.consumeitempurchase_id;
+        END IF;
+
+</trigger>

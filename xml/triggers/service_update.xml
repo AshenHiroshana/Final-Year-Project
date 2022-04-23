@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="service_update" event="AFTER_UPDATE" table="service">
+    IF NEW.servicestatus_id = 2 or NEW.servicestatus_id = 3 THEN
+        update procurementitem
+        set procurementitemstatus_id = IF(procurementitemstatus_id=4, 2, 3)
+        where id in (
+            select procurementitem_id
+            from serviceprocurementitem
+            where service_id=OLD.id
+        );
+    END IF;
+</trigger>

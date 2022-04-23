@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="rental" to-string-ts="rental.code + ' - ' + rental.name" to-string-java="rental.getCode() + #quat; - #quat; + rental.getName()">
+
+    <code length="8" prefix="RE" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="4" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" width="8" name="name" example="Galle Building Rent" label="Name" basic="yes" exist-on-table="yes" min-length="2" required="yes"  />
+    </group>
+
+    <group>
+        <date-property width="4" name="date" label="Rental Date" example="2020/10/02" exist-on-table="yes" required="yes"/>
+        <decimal-property width="4" name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" min="0" max="10000000"/>
+        <reference-property required="yes" default-value="1" insertable="no" exist-on-table="yes" searchable="yes" width="4" name="rentalstatus" label="Status" referenced-from="rentalstatus" service-method="getAll" to-string-java="rentalstatus.getName()" to-string-ts="rentalstatus.name"/>
+    </group>
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

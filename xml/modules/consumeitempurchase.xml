@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="consumeitempurchase" to-string-ts="consumeitempurchase.code" to-string-java="consumeitempurchase.getCode()">
+
+    <code length="8" prefix="CIP" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="6" name="vendor" label="Vendor" referenced-from="vendor" service-method="getAllBasic" to-string-java="vendor.getName()" to-string-ts="vendor.name"/>
+        <date-property width="6" name="date" label="Date of Purchased" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+   <group>
+       <decimal-property width="6" name="total" label="Price" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+       <decimal-property width="6" name="balance" label="Balance" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes"  min="0" max="10000000"/>
+   </group>
+
+    <sub-module min="1" label="Items" name="consumeitempurchaseconsumeitem" to-string-ts="consumeitempurchaseconsumeitem.consumeitem.name" to-string-java="consumeitempurchaseconsumeitem.getConsumeitem().getName()">
+        <int-property required="yes" width="6" name="qty" label="QTY" example="50"  />
+        <decimal-property name="unitprice" label="Unit Price" example="Rs : 1500" exist-on-table="yes" precision="10" scale="2" required="yes"  min="0" max="10000000"/>
+        <reference-property required="yes" name="consumeitem" label="Item" referenced-from="consumeitem" service-method="getAllBasic" to-string-java="consumeitem.getName()" to-string-ts="consumeitem.name"/>
+        <decimal-property name="linetotal" label="Total" example="Rs : 1500" exist-on-table="yes" precision="10" scale="2" required="yes"  min="0" max="10000000"/>
+    </sub-module>
+
+    <file-property name="invoice" label="Invoice" accept="application/pdf"/>
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

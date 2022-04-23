@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="printorder" to-string-ts="printorder.code" to-string-java="printorder.getCode()">
+
+    <code length="8" prefix="PO" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="4" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="4" name="material" label="Material" referenced-from="material" service-method="getAllBasic" to-string-java="material.getCode() + #quat; - #quat; + material.getName()" to-string-ts="material.code + ' - ' + material.name"/>
+        <int-property required="yes" width="4" name="qty" label="QTY" example="50"  />
+    </group>
+
+
+    <group>
+        <date-property width="6" required="yes" name="ordereddate" label="Ordered Date" example="1994-12-31"/>
+        <date-property width="6" required="yes" exist-on-table="yes" name="requireddate" label="Required Date" example="1994-12-31"/>
+    </group>
+
+   <group>
+       <date-property insertable="no" width="6" name="receiveddate" label="Received Date" example="1994-12-31"/>
+       <reference-property width="6" required="yes" default-value="1" insertable="no" searchable="yes" exist-on-table="yes" name="printorderstatus" label="Status" referenced-from="printorderstatus" service-method="getAll" live="no" to-string-java="printorderstatus.getName()" to-string-ts="printorderstatus.name"/>
+   </group>
+
+</regular-module>
+
+

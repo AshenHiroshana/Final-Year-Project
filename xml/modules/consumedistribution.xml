@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="consumedistribution" to-string-ts="consumedistribution.code" to-string-java="consumedistribution.getCode()">
+
+    <code length="8" prefix="CID" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property required="yes"  basic="yes" exist-on-table="yes"  searchable="yes" width="4" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <date-property width="4" name="date" label="Date of Distributed" example="2020/10/02" exist-on-table="yes" required="yes"/>
+        <reference-property required="yes" insertable="no" default-value="1" width="4" searchable="yes" exist-on-table="yes" name="consumedistributionstatus" label="Status" referenced-from="consumedistributionstatus" service-method="getAll" to-string-java="consumedistributionstatus.getName()" to-string-ts="consumedistributionstatus.name"/>
+    </group>
+
+    <sub-module label="Items"  name="consumedistributionitem" to-string-ts="consumedistributionitem.consumeitem.name" to-string-java="consumedistributionitem.getConsumeitem().getName()">
+        <reference-property required="yes" name="consumeitem" label="Item" referenced-from="consumeitem" service-method="getAllBasic" to-string-java="consumeitem.getName()" to-string-ts="consumeitem.name"/>
+        <int-property required="yes" width="6" name="qty" label="QTY" example="50"  />
+    </sub-module>
+
+
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+

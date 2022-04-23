@@ -1,0 +1,430 @@
+<app-no-privilege message="No privilege to add new employee" *ngIf="!privilege.add"></app-no-privilege>
+<div *ngIf="privilege.add">
+  <app-page-header title="Employee Form" [breadcrumbSegments]="['Employees', 'Add New Employee']"></app-page-header>
+
+
+
+  <mat-vertical-stepper [linear]="true" #stepper>
+
+    <mat-step [stepControl]="basicDetailsFormGroup" errorMessage="Fill Required Basic Details">
+
+      <form [formGroup]="basicDetailsFormGroup" #ngForm="ngForm">
+        <ng-template matStepLabel>Basic Details</ng-template>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Title</mat-label>
+                <mat-select formControlName="nametitle" required>
+                  <mat-option *ngFor="let nametitle of nametitles" [value]="nametitle">{{nametitle.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="nametitleField.invalid">
+                  <span *ngIf="nametitleField.errors.required">Select at lease one title</span>
+                  <span *ngIf="nametitleField.errors.server">{{nametitleField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Calling Name</mat-label>
+                <input matInput formControlName="callingname" required>
+                <mat-hint>Ex: Kamal</mat-hint>
+                <mat-error *ngIf="callingnameField.invalid">
+                  <span *ngIf="callingnameField.errors.required">Calling Name is required</span>
+                  <span *ngIf="callingnameField.errors.server">{{callingnameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="callingnameField.errors.minlength">Calling Name should has at least 3 characters. </span>
+                  <span *ngIf="callingnameField.errors.maxlength">Calling Name can have a maximum of 255 characters. </span>
+                  <span *ngIf="callingnameField.errors.pattern">Calling Name is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullname" required>
+            <mat-hint>Ex: Kamal Perera</mat-hint>
+            <mat-error *ngIf="fullnameField.invalid">
+              <span *ngIf="fullnameField.errors.required">Full Name is required</span>
+              <span *ngIf="fullnameField.errors.server">{{fullnameField.errors.server.join(', ')}}</span>
+              <span *ngIf="fullnameField.errors.minlength">Full Name should has at least 3 characters. </span>
+              <span *ngIf="fullnameField.errors.maxlength">Full Name can have a maximum of 255 characters. </span>
+              <span *ngIf="fullnameField.errors.pattern">Full Name is invalid.</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <label>Gender : </label>
+              <mat-radio-group class="form-radio-group" required formControlName="gender">
+                <mat-radio-button style="margin-left:10px" class="form-radio-button"  *ngFor="let gender of genders" [value]="gender.id">{{gender.name}}</mat-radio-button>
+                <mat-error *ngIf="genderField.invalid && this.submitted">
+                  <span *ngIf="genderField.errors.required">Gender is required</span>
+                </mat-error>
+              </mat-radio-group>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Civil Status</mat-label>
+                <mat-select formControlName="civilstatus" required>
+                  <mat-option *ngFor="let civilstatus of civilstatuses" [value]="civilstatus.id">{{civilstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="civilstatusField.invalid">
+                  <span *ngIf="civilstatusField.errors.required">Select at lease one civil status</span>
+                  <span *ngIf="civilstatusField.errors.server">{{civilstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date Of Birth</mat-label>
+                <input matInput (ngModelChange)="validateDOB()" [matDatepicker]="pickerdobirth" formControlName="dobirth" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdobirth"></mat-datepicker-toggle>
+                <mat-datepicker (select)="validateDOB()" #pickerdobirth></mat-datepicker>
+                <mat-hint>Ex: 1994-12-31</mat-hint>
+                <mat-error *ngIf="dobirthField.invalid">
+                  <span *ngIf="dobirthField.errors.required">Date Of Birth is required</span>
+                  <span *ngIf="dobirthField.errors.server">{{dobirthField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>NIC Number</mat-label>
+                <input (keyup)="validateNIC();validateDOB()" matInput formControlName="nic" required>
+                <mat-hint>Ex: 940081009V</mat-hint>
+                <mat-error *ngIf="nicField.invalid">
+                  <span *ngIf="nicField.errors.required">NIC Number is required</span>
+                  <span *ngIf="nicField.errors.server">{{nicField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nicField.errors.minlength">NIC Number should has at least 10 characters. </span>
+                  <span *ngIf="nicField.errors.maxlength">NIC Number can have a maximum of 12 characters. </span>
+                  <span *ngIf="nicField.errors.pattern">NIC Number is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperNext (click)="submitted = true">Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step [stepControl]="contactDetailsFormGroup" errorMessage="Fill Required Contact Details">
+
+      <form [formGroup]="contactDetailsFormGroup">
+        <ng-template matStepLabel>Contact Details</ng-template>
+
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Mobile Number</mat-label>
+                    <input matInput formControlName="mobile" required>
+                    <mat-hint>Ex: 0766123045</mat-hint>
+                    <mat-error *ngIf="mobileField.invalid">
+                      <span *ngIf="mobileField.errors.required">Mobile Number is required</span>
+                      <span *ngIf="mobileField.errors.server">{{mobileField.errors.server.join(', ')}}</span>
+                      <span *ngIf="mobileField.errors.minlength">Mobile Number should has at least 9 characters. </span>
+                      <span *ngIf="mobileField.errors.maxlength">Mobile Number can have a maximum of 10 characters. </span>
+                      <span *ngIf="mobileField.errors.pattern">Mobile Number is invalid.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Land Number</mat-label>
+                    <input matInput formControlName="land" >
+                    <mat-hint>Ex: 0112789456</mat-hint>
+                    <mat-error *ngIf="landField.invalid">
+                      <span *ngIf="landField.errors.server">{{landField.errors.server.join(', ')}}</span>
+                      <span *ngIf="landField.errors.minlength">Land Number should has at least 9 characters. </span>
+                      <span *ngIf="landField.errors.maxlength">Land Number can have a maximum of 10 characters. </span>
+                      <span *ngIf="landField.errors.pattern">Land Number is invalid.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Email Address</mat-label>
+                    <input matInput formControlName="email" >
+                    <mat-hint>Ex: user@gmail.com</mat-hint>
+                    <mat-error *ngIf="emailField.invalid">
+                      <span *ngIf="emailField.errors.server">{{emailField.errors.server.join(', ')}}</span>
+                      <span *ngIf="emailField.errors.minlength">Email Address should has at least 5 characters. </span>
+                      <span *ngIf="emailField.errors.maxlength">Email Address can have a maximum of 255 characters. </span>
+                      <span *ngIf="emailField.errors.pattern">Email Address is invalid.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Address</mat-label>
+                <textarea matInput formControlName="address" required></textarea>
+                <mat-hint>Ex: 123, Colombo Road, Gampaha</mat-hint>
+                <mat-error *ngIf="addressField.invalid">
+                  <span *ngIf="addressField.errors.required">Address is required</span>
+                  <span *ngIf="addressField.errors.server">{{addressField.errors.server.join(', ')}}</span>
+                  <span *ngIf="addressField.errors.minlength">Address should has at least 4 characters. </span>
+                  <span *ngIf="addressField.errors.maxlength">Address can have a maximum of 65535 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step [stepControl]="designationAndBankDetailsFormGroup" errorMessage="Fill Required Appointment And Bank Details">
+
+      <form [formGroup]="designationAndBankDetailsFormGroup">
+        <ng-template matStepLabel>Appointment And Bank Details</ng-template>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Designation</mat-label>
+                <mat-select formControlName="designation" required>
+                  <mat-option *ngFor="let designation of designations" [value]="designation.id">{{designation.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="designationField.invalid">
+                  <span *ngIf="designationField.errors.required">Select at lease one designation</span>
+                  <span *ngIf="designationField.errors.server">{{designationField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date Of Recruit</mat-label>
+                <input matInput [max]="dateVaidation()" [matDatepicker]="pickerdorecruit" formControlName="dorecruit" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdorecruit"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdorecruit></mat-datepicker>
+                <mat-hint>Ex: 2000-12-31</mat-hint>
+                <mat-error *ngIf="dorecruitField.invalid">
+                  <span *ngIf="dorecruitField.errors.required">Date Of Recruit is required</span>
+                  <span *ngIf="dorecruitField.errors.server">{{dorecruitField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>EPF Number</mat-label>
+                <input matInput formControlName="epfno" >
+                <mat-hint>Ex: 3362728</mat-hint>
+                <mat-error *ngIf="epfnoField.invalid">
+                  <span *ngIf="epfnoField.errors.server">{{epfnoField.errors.server.join(', ')}}</span>
+                  <span *ngIf="epfnoField.errors.minlength">Title should has at least null characters. </span>
+                  <span *ngIf="epfnoField.errors.maxlength">Title can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Account Number</mat-label>
+                <input matInput formControlName="bankaccountno" >
+                <mat-hint>Ex: 33623432728</mat-hint>
+                <mat-error *ngIf="bankaccountnoField.invalid">
+                  <span *ngIf="bankaccountnoField.errors.server">{{bankaccountnoField.errors.server.join(', ')}}</span>
+                  <span *ngIf="bankaccountnoField.errors.minlength">Account Number should has at least null characters. </span>
+                  <span *ngIf="bankaccountnoField.errors.maxlength">Account Number can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="bankname" >
+                <mat-hint>Ex: Sampath Bank</mat-hint>
+                <mat-error *ngIf="banknameField.invalid">
+                  <span *ngIf="banknameField.errors.server">{{banknameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="banknameField.errors.minlength">Name should has at least null characters. </span>
+                  <span *ngIf="banknameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch</mat-label>
+                <input matInput formControlName="bankbranch" >
+                <mat-hint>Ex: Gampaha</mat-hint>
+                <mat-error *ngIf="bankbranchField.invalid">
+                  <span *ngIf="bankbranchField.errors.server">{{bankbranchField.errors.server.join(', ')}}</span>
+                  <span *ngIf="bankbranchField.errors.minlength">Branch should has at least null characters. </span>
+                  <span *ngIf="bankbranchField.errors.maxlength">Branch can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step [stepControl]="descriptionAndPhotoFormGroup" errorMessage="Fill Required Description And Photo Details">
+
+      <form [formGroup]="descriptionAndPhotoFormGroup">
+        <ng-template matStepLabel>Description And Photo Details</ng-template>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Photo</mat-label>
+              <app-file-chooser placeholder="No choosed photos to show" [min]="1" [max]="1" [accept]="['image/*']" formControlName="photo"></app-file-chooser>
+              <mat-hint>Select any image/* file</mat-hint>
+              <mat-error *ngIf="photoField.invalid">
+                <span *ngIf="photoField.errors.server">{{photoField.errors.server.join(', ')}}</span>
+                <span *ngIf="photoField.errors.min">photo is required</span>
+                <span *ngIf="photoField.errors.max">Maximum allowed photo count is 1</span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" ></textarea>
+              <mat-hint>Ex: </mat-hint>
+              <mat-error *ngIf="descriptionField.invalid">
+                <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+                <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+                <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step [stepControl]="branchFormGroup" errorMessage="Fill Required Branch Details">
+
+      <form [formGroup]="branchFormGroup">
+        <ng-template matStepLabel>Branch Details</ng-template>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Branch</mat-label>
+            <app-dual-listbox [getToString]="getBranchToString" [min]="1"  placeholder="Add Branch To Here" [sourceData]="branches" formControlName="branches"></app-dual-listbox>
+            <mat-error *ngIf="branchesField.invalid">
+              <span *ngIf="branchesField.errors.min">Select at lease 1 Branch</span>
+              <span *ngIf="branchesField.errors.server">{{branchesField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step [stepControl]="educationqualificationDetailFormGroup" errorMessage="Fill Required Qualification Details">
+
+      <form [formGroup]="educationqualificationDetailFormGroup">
+        <ng-template matStepLabel>Qualification Details</ng-template>
+
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Education Qualification</h3>
+          <app-educationqualification-sub-form [min]="1" [max]="0" formControlName="educationqualifications"></app-educationqualification-sub-form>
+          <div class="error-box" *ngIf="educationqualificationsField.invalid && !educationqualificationsField.pristine">
+            <p *ngIf="educationqualificationsField.errors.min">Should has at least 1 education qualification</p>
+            <p *ngIf="educationqualificationsField.errors.max">Maximum allowed only 0 Education Qualification</p>
+            <span *ngIf="educationqualificationsField.errors.server">{{educationqualificationsField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step  [stepControl]="workexperienceFormGroup" errorMessage="Fill Required Experience Details">
+
+      <form [formGroup]="workexperienceFormGroup">
+        <ng-template matStepLabel>Experience Details</ng-template>
+
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Work Experience</h3>
+          <app-workexperience-sub-form [min]="1" [max]="0" formControlName="workexperiences"></app-workexperience-sub-form>
+          <div class="error-box" *ngIf="workexperiencesField.invalid && !workexperiencesField.pristine">
+            <p *ngIf="workexperiencesField.errors.min">Should has at least 1 work experience</p>
+            <p *ngIf="workexperiencesField.errors.max">Maximum allowed only 0 Work Experience</p>
+            <span *ngIf="workexperiencesField.errors.server">{{workexperiencesField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+        <div class="steper-summary">
+          <div class="row">
+            <div class="col-md-3">
+              <img *ngIf="!this.photoField.value" style=" width: 150px;height: 150px;border-radius: 5px;" src="assets/image.png">
+              <img *ngIf="this.photoField.value" style=" width: 150px;height: 150px;border-radius: 5px;" src="{{thumbnailURL}}{{this.photoField.value}}">
+            </div>
+            <div class="col-md-9">
+              <label ><b>Full Name : </b></label> <label><i> {{nametitleField.value.name}} : {{fullnameField.value}} </i></label>
+              <br>
+              <label><b>NIC : &nbsp;</b></label> <label><i> {{nicField.value}} </i></label>
+              <br>
+              <label><b>Mobile : &nbsp;</b></label> <label><i> {{mobileField.value}}</i></label>
+              <br>
+              <label><b>Mobile : &nbsp;</b></label> <label><i> {{mobileField.value}}</i></label>
+            </div>
+          </div>
+        </div>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button class="mr-0" (click)="submit()" mat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+      </div>
+    </mat-step>
+
+  </mat-vertical-stepper>
+
+</div>

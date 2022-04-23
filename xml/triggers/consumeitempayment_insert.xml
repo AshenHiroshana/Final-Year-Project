@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="consumeitempayment_insert" event="AFTER_INSERT" table="consumeitempayment">
+    update consumeitempurchase set balance = balance - NEW.amount where id = NEW.consumeitempurchase_id;
+</trigger>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="designation" to-string-ts="designation.code + ' - ' + designation.department.name + ' ' + designation.name" to-string-java="designation.getCode() + #quat; - #quat; + designation.department.getName() + #quat; #quat; + designation.getName()">
+
+    <code length="8" prefix="DES" searchable="yes" exist-on-table="yes"/>
+
+    <varchar-property pattern="^[a-zA-Z ]{3,}$" basic="yes" exist-on-table="yes" required="yes" name="name" label="Name" example="Manager"/>
+
+    <group>
+        <reference-property basic="yes" required="yes" exist-on-table="yes" searchable="yes" width="6" name="department" label="Department" referenced-from="department" service-method="getAll" live="no" to-string-java="department.getName()" to-string-ts="department.name"/>
+        <decimal-property width="6" name="basicsalary" label="Basic Salary" example="Rs : 1500" precision="10" scale="2" required="yes" exist-on-table="yes"  min="0" max="10000000"/>
+    </group>
+
+</regular-module>
+
+

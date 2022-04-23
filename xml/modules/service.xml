@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="service" to-string-ts="service.code" to-string-java="service.getCode()">
+
+    <code length="8" prefix="SVS" exist-on-table="yes"/>
+
+
+    <group>
+        <reference-property required="yes"  exist-on-table="yes"  searchable="yes" width="4" name="branch" label="Branch" referenced-from="branch" service-method="getAllBasic" to-string-java="branch.getCity()" to-string-ts="branch.city"/>
+        <reference-property required="yes" exist-on-table="yes"  searchable="yes" width="4" name="vendor" label="Vendor" referenced-from="vendor" service-method="getAllBasic" to-string-java="vendor.getName()" to-string-ts="vendor.name"/>
+        <reference-property required="yes" exist-on-table="yes"  searchable="yes" width="4" name="servicetype" label="Type" referenced-from="servicetype" service-method="getAllBasic" to-string-java="servicetype.getName()" to-string-ts="servicetype.name"/>
+    </group>
+
+    <group>
+        <date-property width="4" name="sdate" label="Start Date" example="2020/10/02" required="yes"/>
+        <varchar-property width="8" basic="yes" exist-on-table="yes" required="yes" name="title" label="Title" example="Gampaha Reception A/C Repair" min-length="5" />
+    </group>
+
+    <sub-module label="Service Items" min="1" name="serviceprocurementitem" to-string-ts="serviceprocurementitem.procurementitem.code" to-string-java="serviceprocurementitem.getProcurementitem().getCode()">
+        <decimal-property  name="amount" label="Amount" example="Rs : 1500" exist-on-table="yes" precision="10" scale="2" required="yes"  min="0" max="10000000"/>
+        <reference-property name="procurementitem" label="Item" referenced-from="procurementitem" service-method="getAllBasic" to-string-java="procurementitem.getCode()" to-string-ts="procurementitem.code"/>
+    </sub-module>
+
+    <group>
+        <decimal-property width="3" name="total" label="Price" example="Rs : 1500" precision="10" scale="2" required="yes" min="0" max="10000000"/>
+        <decimal-property width="3" name="balance" label="Balance" example="Rs : 1500" precision="10" scale="2" required="yes"  min="0" max="10000000"/>
+        <date-property width="3" name="edate" label="End Date" example="2020/10/02" />
+        <reference-property required="yes" insertable="no" default-value="1" exist-on-table="yes"  searchable="yes" width="3" name="servicestatus" label="Status" referenced-from="servicestatus" service-method="getAll" to-string-java="servicestatus.getName()" to-string-ts="servicestatus.name"/>
+    </group>
+    <file-property insertable="no" name="invoice" label="Invoice" accept="application/pdf"/>
+
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+
+

@@ -1,0 +1,128 @@
+<app-no-privilege *ngIf="!privilege.showAll" message="No privilege to show all procurementrefunds"></app-no-privilege>
+<div *ngIf="privilege.showAll">
+  <app-page-header title="Procurementrefunds" [breadcrumbSegments]="['Procurementrefunds', 'Show All Procurementrefunds']"></app-page-header>
+  <div *ngIf="procurementrefundDataPage!==undefined">
+    <mat-card>
+      <mat-card-content>
+        <div class="mb-2" *ngIf="privilege.add">
+          <button class="mx-0" routerLink="/procurementrefunds/add" mat-stroked-button><mat-icon>add</mat-icon> New Procurementrefund</button>
+        </div>
+        <div class="mb-1">
+          <div class="row">
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Code</mat-label>
+                <input matInput [formControl]="codeField" (keyup)="loadData()">
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Purchase</mat-label>
+                <mat-select [formControl]="procurementitempurchaseField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Purchase</mat-option>
+                  <mat-option *ngFor="let procurementitempurchase of procurementitempurchases" [value]="procurementitempurchase.id">{{procurementitempurchase.code}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Payment Status</mat-label>
+                <mat-select [formControl]="paymentstatusField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Payment Status</mat-option>
+                  <mat-option *ngFor="let paymentstatus of paymentstatuses" [value]="paymentstatus.id">{{paymentstatus.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Payment Type</mat-label>
+                <mat-select [formControl]="paymenttypeField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Payment Type</mat-option>
+                  <mat-option *ngFor="let paymenttype of paymenttypes" [value]="paymenttype.id">{{paymenttype.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="procurementrefundDataPage.totalElements > 0">
+          <table mat-table [dataSource]="procurementrefundDataPage.content" class="w-100">
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>Code</th>
+              <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="procurementitempurchase">
+              <th mat-header-cell *matHeaderCellDef>Purchase</th>
+              <td mat-cell *matCellDef="let element"> {{element.procurementitempurchase.code}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date of Purchased</th>
+              <td mat-cell *matCellDef="let element"> {{element.date | date: 'longDate'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
+              <td mat-cell *matCellDef="let element"> {{element.amount | currency :'Rs.'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymentstatus">
+              <th mat-header-cell *matHeaderCellDef>Payment Status</th>
+              <td mat-cell *matCellDef="let element"> {{element.paymentstatus.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymenttype">
+              <th mat-header-cell *matHeaderCellDef>Payment Type</th>
+              <td mat-cell *matCellDef="let element"> {{element.paymenttype.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="more-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button routerLink="/procurementrefunds/{{element.id}}" class="mat-btn-sm" mat-stroked-button><mat-icon>visibility</mat-icon> More ...</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button (click)="delete(element)" class="mat-btn-sm" mat-flat-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="done">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button (click)="paumentDone(element)" [disabled]="element.paymentstatus.id != 2" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon>  Done </button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reject">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button (click)="paumentReject(element)" [disabled]="element.paymentstatus.id != 2" class="mat-btn-sm" mat-flat-button color="warn"><mat-icon>delete</mat-icon> Reject </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <app-empty-data-table message="No procurementrefunds to show" *ngIf="procurementrefundDataPage.totalElements === 0"></app-empty-data-table>
+        <div class="mt-1">
+          <mat-paginator
+            [length]="procurementrefundDataPage.totalElements"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100]"
+            (page)="paginate($event)"
+            [showFirstLastButtons]="true"
+          >
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

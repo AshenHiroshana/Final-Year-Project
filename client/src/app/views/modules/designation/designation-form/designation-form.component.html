@@ -1,0 +1,63 @@
+<app-no-privilege message="No privilege to add new designation" *ngIf="!privilege.add"></app-no-privilege>
+<div *ngIf="privilege.add">
+  <app-page-header title="Designation Form" [breadcrumbSegments]="['Designations', 'Add New Designation']"></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-hint>Ex: Manager</mat-hint>
+            <mat-error *ngIf="nameField.invalid">
+              <span *ngIf="nameField.errors.required">Name is required</span>
+              <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+              <span *ngIf="nameField.errors.minlength">Name should has at least null characters. </span>
+              <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+              <span *ngIf="nameField.errors.pattern">Name is invalid.</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department" required>
+                  <mat-option *ngFor="let department of departments" [value]="department.id">{{department.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="departmentField.invalid">
+                  <span *ngIf="departmentField.errors.required">Select at lease one department</span>
+                  <span *ngIf="departmentField.errors.server">{{departmentField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Basic Salary</mat-label>
+                <input type="number" matInput formControlName="basicsalary" required>
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="basicsalaryField.invalid">
+                  <span *ngIf="basicsalaryField.errors.required">Basic Salary is required</span>
+                  <span *ngIf="basicsalaryField.errors.server">{{basicsalaryField.errors.server.join(', ')}}</span>
+                  <span *ngIf="basicsalaryField.errors.min">Basic Salary should be equal or greater than 0</span>
+                  <span *ngIf="basicsalaryField.errors.max">Basic Salary should be equal or less than 10000000</span>
+                  <span *ngIf="basicsalaryField.errors.pattern">Basic Salary is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/designations" class="ml-0" mat-flat-button color="primary"><mat-icon>list</mat-icon> All Designations</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="reset"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="right">
+        <span class="text-warning">*</span> Required Fields
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

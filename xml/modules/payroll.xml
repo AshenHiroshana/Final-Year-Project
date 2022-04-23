@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="payroll" to-string-ts="payroll.code + ' - ' + payroll.employee.nametitle.name + ' ' + payroll.employee.callingname" to-string-java="payroll.getCode() + #quat; - #quat; + payroll.employee.getNametitle.getName() + #quat; #quat; + payroll.employee.getCallingname()">
+
+    <code length="8" prefix="PR" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <reference-property basic="yes" exist-on-table="yes" required="yes" searchable="yes"  width="6" name="employee" label="Employee" referenced-from="employee" service-method="getAllBasic" to-string-java="employee.getNametitle.getName() + #quat; #quat; + employee.getCallingname()" to-string-ts="employee.nametitle.name + ' ' + employee.callingname"/>
+        <reference-property exist-on-table="yes" required="yes" searchable="yes"  width="6" name="appointment" label="Appointment" referenced-from="appointment" service-method="getAllBasic" to-string-java="appointment.getCode()" to-string-ts="appointment.code"/>
+    </group>
+
+    <group>
+        <decimal-property width="4" name="basicsalary" label="Basic Salary" example="Rs : 15000" precision="10" scale="2" required="yes" exist-on-table="yes" basic="yes"  min="0" max="10000000"/>
+        <decimal-property width="4" name="epfamount" label="Epf Amount" example="Rs : 1500" precision="10" scale="2" required="yes" basic="yes"  min="0" max="10000000"/>
+        <decimal-property width="4" name="netsalary" label="Net Salary" example="Rs : 15000" precision="10" scale="2" required="yes" basic="yes"  min="0" max="10000000"/>
+    </group>
+
+    <group>
+        <date-property width="6" name="paydate" label="Pay Date" example="2020/10/02" exist-on-table="yes" required="yes"/>
+        <date-property width="6" name="month" label="Month" example="2020/10/02" exist-on-table="yes" required="yes"/>
+    </group>
+
+    <group>
+        <varchar-property width="4" required="yes" name="bankaccountno" label="Account Number" example="17005524665942"/>
+        <varchar-property width="4" required="yes" name="bankname" label="Bank" example="Sampath Bank"/>
+        <varchar-property width="4" required="yes" name="bankbranch" label="Branch" example="Branch"/>
+    </group>
+
+    <sub-module label="Addition"  name="payrolladdition" to-string-ts="payrolladdition.title" to-string-java="payrolladdition.getTitle()">
+        <varchar-property  name="title" example="" label="Title" min-length="2" required="yes"  />
+        <decimal-property  name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" min="0" max="10000000"/>
+    </sub-module>
+
+    <sub-module label="Deduction"  name="payrolldeduction" to-string-ts="payrolldeduction.title" to-string-java="payrolldeduction.getTitle()">
+        <varchar-property  name="title" example="" label="Title" min-length="2" required="yes"  />
+        <decimal-property  name="amount" label="Amount" example="Rs : 1500" precision="10" scale="2" required="yes" min="0" max="10000000"/>
+    </sub-module>
+
+    <text-property name="description" label="Description" example=""/>
+
+</regular-module>
+
+
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE trigger SYSTEM "./../dtd/trigger.dtd">
+<trigger name="procurementallocationprocurementitem_update" event="AFTER_UPDATE" table="procurementallocationprocurementitem">
+
+    IF OLD.procurementitem_id != NEW.procurementitem_id THEN
+        update procurementitem set procurementitemstatus_id = 3 where id = OLD.procurementitem_id;
+    END IF;
+
+    IF NEW.allocationstatus_id = 2 THEN
+        update procurementitem set procurementitemstatus_id = 3 where id = NEW.procurementitem_id;
+    END IF;
+
+    IF NEW.allocationstatus_id = 1 THEN
+        update procurementitem set procurementitemstatus_id = 2 where id = NEW.procurementitem_id;
+    END IF;
+
+</trigger>

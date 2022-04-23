@@ -1,0 +1,160 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change vendor details"></app-no-privilege>
+<div *ngIf="this.vendor && privilege.update">
+  <app-page-header
+    title="Vendor Change Form of {{ vendor.code + ' - ' + vendor.name }}"
+    [breadcrumbSegments]="['Vendors', 'Show All Vendors', 'Change Details of ' + vendor.code + ' - ' + vendor.name]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-hint>Ex: Kamal</mat-hint>
+                <mat-error *ngIf="nameField.invalid">
+                  <span *ngIf="nameField.errors.required">Name is required</span>
+                  <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nameField.errors.minlength">Name should has at least null characters. </span>
+                  <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+                  <span *ngIf="nameField.errors.pattern">Name is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email Address</mat-label>
+                <input matInput formControlName="email" >
+                <mat-hint>Ex: user@gmail.com</mat-hint>
+                <mat-error *ngIf="emailField.invalid">
+                  <span *ngIf="emailField.errors.server">{{emailField.errors.server.join(', ')}}</span>
+                  <span *ngIf="emailField.errors.minlength">Email Address should has at least 5 characters. </span>
+                  <span *ngIf="emailField.errors.maxlength">Email Address can have a maximum of 255 characters. </span>
+                  <span *ngIf="emailField.errors.pattern">Email Address is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Primary Contact</mat-label>
+                <input matInput formControlName="primarycontact" required>
+                <mat-hint>Ex: 0112795483</mat-hint>
+                <mat-error *ngIf="primarycontactField.invalid">
+                  <span *ngIf="primarycontactField.errors.required">Primary Contact is required</span>
+                  <span *ngIf="primarycontactField.errors.server">{{primarycontactField.errors.server.join(', ')}}</span>
+                  <span *ngIf="primarycontactField.errors.minlength">Primary Contact should has 10 characters. </span>
+                  <span *ngIf="primarycontactField.errors.maxlength">Primary Contact should has 10 characters. </span>
+                  <span *ngIf="primarycontactField.errors.pattern">Primary Contact is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Secondary Contact</mat-label>
+                <input matInput formControlName="secondarycontact" >
+                <mat-hint>Ex: 0112795483</mat-hint>
+                <mat-error *ngIf="secondarycontactField.invalid">
+                  <span *ngIf="secondarycontactField.errors.server">{{secondarycontactField.errors.server.join(', ')}}</span>
+                  <span *ngIf="secondarycontactField.errors.minlength">Secondary Contact should has 10 characters. </span>
+                  <span *ngIf="secondarycontactField.errors.maxlength">Secondary Contact should has 10 characters. </span>
+                  <span *ngIf="secondarycontactField.errors.pattern">Secondary Contact is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fax</mat-label>
+                <input matInput formControlName="fax" >
+                <mat-hint>Ex: 0112795483</mat-hint>
+                <mat-error *ngIf="faxField.invalid">
+                  <span *ngIf="faxField.errors.server">{{faxField.errors.server.join(', ')}}</span>
+                  <span *ngIf="faxField.errors.minlength">Fax should has 10 characters. </span>
+                  <span *ngIf="faxField.errors.maxlength">Fax should has 10 characters. </span>
+                  <span *ngIf="faxField.errors.pattern">Fax is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="vendortype" required>
+                  <mat-option *ngFor="let vendortype of vendortypes" [value]="vendortype.id">{{vendortype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="vendortypeField.invalid">
+                  <span *ngIf="vendortypeField.errors.required">Select at lease one type</span>
+                  <span *ngIf="vendortypeField.errors.server">{{vendortypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="vendorstatus" required>
+                  <mat-option *ngFor="let vendorstatus of vendorstatuses" [value]="vendorstatus.id">{{vendorstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="vendorstatusField.invalid">
+                  <span *ngIf="vendorstatusField.errors.required">Select at lease one status</span>
+                  <span *ngIf="vendorstatusField.errors.server">{{vendorstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Star Rate</mat-label>
+                <input type="number" matInput formControlName="starrate" >
+                <mat-hint>Ex: 3.5</mat-hint>
+                <mat-error *ngIf="starrateField.invalid">
+                  <span *ngIf="starrateField.errors.server">{{starrateField.errors.server.join(', ')}}</span>
+                  <span *ngIf="starrateField.errors.min">Star Rate should be equal or greater than 0</span>
+                  <span *ngIf="starrateField.errors.max">Star Rate should be equal or less than 3</span>
+                  <span *ngIf="starrateField.errors.pattern">Star Rate is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address</mat-label>
+            <textarea matInput formControlName="address" required></textarea>
+            <mat-hint>Ex: 123, Colombo Road, Gampaha</mat-hint>
+            <mat-error *ngIf="addressField.invalid">
+              <span *ngIf="addressField.errors.required">Address is required</span>
+              <span *ngIf="addressField.errors.server">{{addressField.errors.server.join(', ')}}</span>
+              <span *ngIf="addressField.errors.minlength">Address should has at least 4 characters. </span>
+              <span *ngIf="addressField.errors.maxlength">Address can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/vendors" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Vendors</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

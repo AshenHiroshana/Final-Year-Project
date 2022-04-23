@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="gender" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="10"/>
+    </properties>
+    <values>
+        <value><data>Male</data></value>
+        <value><data>Female</data></value>
+        <value><data>Other</data></value>
+    </values>
+</seed>

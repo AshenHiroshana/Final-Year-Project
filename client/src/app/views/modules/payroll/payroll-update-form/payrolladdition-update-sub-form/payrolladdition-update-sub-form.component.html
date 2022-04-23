@@ -1,0 +1,69 @@
+<div class="sub-form">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="sub-form-table-container" style="height: 240px;">
+        <div *ngIf="dataList.length === 0" class="sub-form-table-placeholder" style="padding-top: 90px">No additions to show</div>
+        <div *ngIf="dataList.length > 0" >
+
+          <table class="w-100 mat-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dataItem of dataList; let i = index">
+              <td>{{dataItem.title}}</td>
+              <td>{{dataItem.amount | currency :'Rs.'}}</td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="removeData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="warn">
+                  <mat-icon>delete</mat-icon> Delete
+                </button>
+              </td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="updateData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="accent">
+                  <mat-icon>edit</mat-icon> Change
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <form [formGroup]="form" (ngSubmit)="addData()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Title</mat-label>
+          <input (focus)="setValidations()" matInput formControlName="title" [required]="hasValidations">
+          <mat-hint>Ex: </mat-hint>
+          <mat-error *ngIf="titleField.invalid">
+            <span *ngIf="titleField.errors.required">Title is required</span>
+            <span *ngIf="titleField.errors.minlength">Title should has at least 2 characters. </span>
+            <span *ngIf="titleField.errors.maxlength">Title should has at most 255 characters. </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Amount</mat-label>
+          <input (focus)="setValidations()" type="number" matInput formControlName="amount" [required]="hasValidations">
+          <mat-hint>Ex: Rs : 1500</mat-hint>
+          <mat-error *ngIf="amountField.invalid">
+            <span *ngIf="amountField.errors.required">Amount is required</span>
+            <span *ngIf="amountField.errors.min">Amount should be equal or greater than 0. </span>
+            <span *ngIf="amountField.errors.max">Amount should be equal or less than 10000000. </span>
+            <span *ngIf="amountField.errors.pattern">Amount is invalid.</span>
+          </mat-error>
+        </mat-form-field>
+        <div class="text-right mt-5 d-flex">
+          <span class="spacer"></span>
+          <button [disabled]="disabled" (click)="resetForm()" class="mat-btn-sm" mat-stroked-button type="button"><mat-icon>refresh</mat-icon> Clear </button>
+          <button [disabled]="disabled" (click)="setValidations()" class="mr-0 mat-btn-sm" mat-flat-button color="accent" type="submit"><mat-icon>save</mat-icon> ADD </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

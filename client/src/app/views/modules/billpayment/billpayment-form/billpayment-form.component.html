@@ -1,0 +1,115 @@
+<app-no-privilege message="No privilege to add new billpayment" *ngIf="!privilege.add"></app-no-privilege>
+<div *ngIf="privilege.add">
+  <app-page-header title="Billpayment Form" [breadcrumbSegments]="['Billpayments', 'Add New Billpayment']"></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="billpaymenttype" required>
+                  <mat-option *ngFor="let billpaymenttype of billpaymenttypes" [value]="billpaymenttype.id">{{billpaymenttype.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="billpaymenttypeField.invalid">
+                  <span *ngIf="billpaymenttypeField.errors.required">Select at lease one type</span>
+                  <span *ngIf="billpaymenttypeField.errors.server">{{billpaymenttypeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" required>
+                <mat-hint>Ex: Galle Building Water Bill</mat-hint>
+                <mat-error *ngIf="titleField.invalid">
+                  <span *ngIf="titleField.errors.required">Title is required</span>
+                  <span *ngIf="titleField.errors.server">{{titleField.errors.server.join(', ')}}</span>
+                  <span *ngIf="titleField.errors.minlength">Title should has at least 2 characters. </span>
+                  <span *ngIf="titleField.errors.maxlength">Title can have a maximum of 255 characters. </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Branch</mat-label>
+                <mat-select formControlName="branch" required>
+                  <mat-option *ngFor="let branch of branches" [value]="branch.id">{{branch.city}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchField.invalid">
+                  <span *ngIf="branchField.errors.required">Select at lease one branch</span>
+                  <span *ngIf="branchField.errors.server">{{branchField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Amount</mat-label>
+                <input type="number" matInput formControlName="amount" required>
+                <mat-hint>Ex: Rs : 1500</mat-hint>
+                <mat-error *ngIf="amountField.invalid">
+                  <span *ngIf="amountField.errors.required">Amount is required</span>
+                  <span *ngIf="amountField.errors.server">{{amountField.errors.server.join(', ')}}</span>
+                  <span *ngIf="amountField.errors.min">Amount should be equal or greater than 0</span>
+                  <span *ngIf="amountField.errors.max">Amount should be equal or less than 10000000</span>
+                  <span *ngIf="amountField.errors.pattern">Amount is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date of Purchased</mat-label>
+                <input  [max]="dateVaidation()" matInput [matDatepicker]="pickerdate" formControlName="date" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdate"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdate></mat-datepicker>
+                <mat-hint>Ex: 2020/10/02</mat-hint>
+                <mat-error *ngIf="dateField.invalid">
+                  <span *ngIf="dateField.errors.required">Date of Purchased is required</span>
+                  <span *ngIf="dateField.errors.server">{{dateField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Photo</mat-label>
+            <app-file-chooser placeholder="No choosed photos to show" [min]="1" [max]="1" [accept]="['image/*']" formControlName="photo"></app-file-chooser>
+            <mat-hint>Select any image/* file</mat-hint>
+            <mat-error *ngIf="photoField.invalid">
+              <span *ngIf="photoField.errors.server">{{photoField.errors.server.join(', ')}}</span>
+              <span *ngIf="photoField.errors.min">photo is required</span>
+              <span *ngIf="photoField.errors.max">Maximum allowed photo count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/billpayments" class="ml-0" mat-flat-button color="primary"><mat-icon>list</mat-icon> All Billpayments</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="reset"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="right">
+        <span class="text-warning">*</span> Required Fields
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

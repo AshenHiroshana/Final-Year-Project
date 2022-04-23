@@ -1,0 +1,126 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change appointment details"></app-no-privilege>
+<div *ngIf="this.appointment && privilege.update">
+  <app-page-header
+    title="Appointment Change Form of {{ appointment.code }}"
+    [breadcrumbSegments]="['Appointments', 'Show All Appointments', 'Change Details of ' + appointment.code]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-5">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Designation</mat-label>
+                <mat-select (selectionChange)="loadData();" formControlName="designation" required>
+                  <mat-option *ngFor="let designation of designations" [value]="designation.id">{{designation.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="designationField.invalid">
+                  <span *ngIf="designationField.errors.required">Select at lease one designation</span>
+                  <span *ngIf="designationField.errors.server">{{designationField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-5">
+              <mat-form-field  appearance="outline"class="w-100">
+                <mat-label>Employee</mat-label>
+                <input (click)="this.searchemployeeField.patchValue('');" placeholder="EM0001" matInput required aria-label="Vendor" [matAutocomplete]="auto" [formControl]="searchemployeeField">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option (onSelectionChange)="setSearchValue(option);" *ngFor="let option of filteredOptions | async" [value]="option.code">
+                    <img *ngIf="!option.photo" class="row-thumbnail" src="assets/image.png">
+                    <img *ngIf="option.photo" class="row-thumbnail" src="{{thumbnailURL}}{{option.photo}}">
+                    {{option.nametitle.name}}
+                    {{option.callingname}} -
+                    {{option.code}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="employeeField.invalid">
+                  <span *ngIf="employeeField.errors.required">Select at lease one vendor</span>
+                  <span *ngIf="employeeField.errors.server">{{employeeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field [hidden]="true" appearance="outline" class="w-100">
+                <mat-label>Employee</mat-label>
+                <mat-select formControlName="employee" required>
+                  <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.nametitle.name + ' ' + employee.callingname}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="employeeField.invalid">
+                  <span *ngIf="employeeField.errors.required">Select at lease one employee</span>
+                  <span *ngIf="employeeField.errors.server">{{employeeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="appointmentstatus" required>
+                  <mat-option *ngFor="let appointmentstatus of appointmentstatuses" [value]="appointmentstatus.id">{{appointmentstatus.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="appointmentstatusField.invalid">
+                  <span *ngIf="appointmentstatusField.errors.required">Select at lease one status</span>
+                  <span *ngIf="appointmentstatusField.errors.server">{{appointmentstatusField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date Of Granted</mat-label>
+                <input matInput [matDatepicker]="pickerdogrant" formControlName="dogrant" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerdogrant"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdogrant></mat-datepicker>
+                <mat-hint>Ex: 1994-12-31</mat-hint>
+                <mat-error *ngIf="dograntField.invalid">
+                  <span *ngIf="dograntField.errors.required">Date Of Granted is required</span>
+                  <span *ngIf="dograntField.errors.server">{{dograntField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date Of Revoke</mat-label>
+                <input matInput [matDatepicker]="pickerdorevoke" formControlName="dorevoke" >
+                <mat-datepicker-toggle matSuffix [for]="pickerdorevoke"></mat-datepicker-toggle>
+                <mat-datepicker #pickerdorevoke></mat-datepicker>
+                <mat-hint>Ex: 1994-12-31</mat-hint>
+                <mat-error *ngIf="dorevokeField.invalid">
+                  <span *ngIf="dorevokeField.errors.server">{{dorevokeField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <h3 class="mb-0 mat-subheading-1 font-weight-light">Allowance</h3>
+          <app-appointmentallowance-update-sub-form [min]="0" [max]="0" formControlName="appointmentallowances"></app-appointmentallowance-update-sub-form>
+          <div class="error-box" *ngIf="appointmentallowancesField.invalid && !appointmentallowancesField.pristine">
+            <p *ngIf="appointmentallowancesField.errors.min">Should has at least 0 allowance</p>
+            <p *ngIf="appointmentallowancesField.errors.max">Maximum allowed only 0 Allowance</p>
+                <span *ngIf="appointmentallowancesField.errors.server">{{appointmentallowancesField.errors.server.join(', ')}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/appointments" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Appointments</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

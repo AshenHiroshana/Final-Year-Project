@@ -1,0 +1,109 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a procurementitem"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !procurementitem" message="Procurementitem Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="procurementitem && privilege.showOne">
+  <app-page-header
+    title="Procurementitem Detail Page of {{ procurementitem.code }}"
+    [breadcrumbSegments]="['Procurementitems', 'Show All Procurementitems', 'Details of ' + procurementitem.code]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <img mat-card-image src="{{photo ? photo: './assets/image.jpg'}}">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{procurementitem.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{procurementitem.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(procurementitem.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Item">
+              <table class="w-100 table-striped custom-data-table">
+                <tbody>
+                <tr>
+                  <th>Code</th>
+                  <td>{{procurementitem.code}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.vendor">
+                  <th>Vendor</th>
+                  <td>{{procurementitem.vendor.name}}</td>
+                </tr>
+                <tr>
+                  <th>Type</th>
+                  <td>{{procurementitem.procurementitemtype.name}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.procurementitempurchase">
+                  <th>Purchase</th>
+                  <td>{{procurementitem.procurementitempurchase.code}}</td>
+                </tr>
+                <tr>
+                  <th>Condition</th>
+                  <td>{{procurementitem.buyingcondition.name}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.price">
+                  <th>Price</th>
+                  <td>{{procurementitem.price | currency: 'Rs.'}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.dopurchased">
+                  <th>Date of Purchased</th>
+                  <td>{{procurementitem.dopurchased | date: 'fullDate'}}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>{{procurementitem.procurementitemstatus.name}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.warrantyenddate">
+                  <th>Date of Warranty End</th>
+                  <td>{{procurementitem.warrantyenddate | date: 'fullDate'}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.nooffreeservices">
+                  <th>Number Of Free Services</th>
+                  <td>{{procurementitem.nooffreeservices}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.brand">
+                  <th>Brand</th>
+                  <td>{{procurementitem.brand}}</td>
+                </tr>
+                <tr *ngIf="procurementitem.description">
+                  <th>Description</th>
+                  <td [innerHTML]="procurementitem.description | nl2br"></td>
+                </tr>
+                </tbody>
+              </table>
+            </mat-tab>
+            <mat-tab label="Invoice">
+
+            </mat-tab>
+            <mat-tab label="Warranty">
+              <img mat-card-image src="{{warranty ? warranty: './assets/image.jpg'}}">
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" [disabled]="procurementitem.procurementitemstatus.id != 1" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/procurementitems/edit/{{procurementitem.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/procurementitems/add" mat-stroked-button><mat-icon>add</mat-icon> New Procurementitem</button>
+    <button *ngIf="privilege.showAll" routerLink="/procurementitems" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Procurementitems</button>
+  </div>
+</div>

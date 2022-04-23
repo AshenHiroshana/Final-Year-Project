@@ -1,0 +1,79 @@
+<div class="sub-form">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="sub-form-table-container" style="height: 240px;">
+        <div *ngIf="dataList.length === 0" class="sub-form-table-placeholder" style="padding-top: 90px">No work experiences to show</div>
+        <div *ngIf="dataList.length > 0" >
+
+          <table class="w-100 mat-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>File</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dataItem of dataList; let i = index">
+              <td>{{dataItem.title}}</td>
+              <td [innerHTML]="dataItem.description | nl2br"></td>
+              <td>
+                <img *ngIf="dataItem.file" class="row-thumbnail" src="{{thumbnailURL}}{{dataItem.file}}" />
+                <span *ngIf="!dataItem.file"><small><i>Not Uploaded</i></small></span>
+              </td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="removeData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="warn">
+                  <mat-icon>delete</mat-icon> Delete
+                </button>
+              </td>
+              <td class="btn-col">
+                <button [disabled]="disabled" type="button" (click)="updateData(i, dataItem)" class="mat-btn-sm" mat-flat-button color="accent">
+                  <mat-icon>edit</mat-icon> Change
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <form [formGroup]="form" (ngSubmit)="addData()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Title</mat-label>
+          <input (focus)="setValidations()" matInput formControlName="title" [required]="hasValidations">
+          <mat-hint>Ex: Two Year Experience as a Teacher</mat-hint>
+          <mat-error *ngIf="titleField.invalid">
+            <span *ngIf="titleField.errors.required">Title is required</span>
+            <span *ngIf="titleField.errors.maxlength">Title should has at most 255 characters. </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Description</mat-label>
+          <textarea  (focus)="setValidations()" matInput formControlName="description" ></textarea>
+          <mat-hint>Ex: </mat-hint>
+          <mat-error *ngIf="descriptionField.invalid">
+            <span *ngIf="descriptionField.errors.maxlength">Description should has at most 65535 characters. </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field (click)="setValidations()" appearance="outline" class="w-100">
+          <mat-label>File</mat-label>
+          <app-file-chooser placeholder="No choosed files to show" [min]="0" [max]="hasValidations ? 1 : 0" [accept]="['image/*', ' application/pdf']" formControlName="file"></app-file-chooser>
+          <mat-hint>Select any image/*,  application/pdf file</mat-hint>
+          <mat-error *ngIf="fileField.invalid">
+            <span *ngIf="fileField.errors.min">file is required</span>
+            <span *ngIf="fileField.errors.max">Maximum allowed file count is 1</span>
+          </mat-error>
+        </mat-form-field>
+        <div class="text-right mt-5 d-flex">
+          <span class="spacer"></span>
+          <button [disabled]="disabled" (click)="resetForm()" class="mat-btn-sm" mat-stroked-button type="button"><mat-icon>refresh</mat-icon> Clear </button>
+          <button [disabled]="disabled" (click)="setValidations()" class="mr-0 mat-btn-sm" mat-flat-button color="accent" type="submit"><mat-icon>save</mat-icon> ADD </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

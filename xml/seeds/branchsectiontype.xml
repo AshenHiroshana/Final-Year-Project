@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="branchsectiontype" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="25"/>
+    </properties>
+    <values>
+        <value><data>Lecture Hall</data></value>
+        <value><data>Office Room</data></value>
+        <value><data>Reception</data></value>
+        <value><data>Kitchen</data></value>
+        <value><data>Rest Area</data></value>
+        <value><data>Balcony</data></value>
+    </values>
+</seed>

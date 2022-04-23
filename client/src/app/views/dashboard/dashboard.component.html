@@ -1,0 +1,142 @@
+<div class="row">
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h4><b>{{billPayments | currency: 'Rs.'}}</b></h4>
+
+        <p>Bill Payments</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-bag"></i>
+      </div>
+      <a routerLink="/billpayments" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h4><b>{{rentalPayments | currency: 'Rs.'}}</b></h4>
+
+        <p>Rental Payments</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-stats-bars"></i>
+      </div>
+      <a routerLink="/rentalpayments" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h4><b>{{concumePayments | currency: 'Rs.'}}</b></h4>
+
+        <p>Consume Payments</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-person-add"></i>
+      </div>
+      <a routerLink="/consumeitempayments" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h4><b>{{servicePayments | currency: 'Rs.'}}</b></h4>
+
+        <p>Servise Payments</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-pie-graph"></i>
+      </div>
+      <a routerLink="/services" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
+<div class="row">
+  <div class="col-md-9">
+    <mat-card class="example-card">
+      <div class="row">
+        <mat-label>
+          <h3 class="mat-title d-inline">Your Pay Roll</h3>
+        </mat-label>
+      </div>
+      <mat-card-content>
+        <div style="display: block; width: 700px; ">
+          <canvas class="none-in-print" baseChart
+                  [datasets]="barChartData"
+                  [labels]="barChartLabels"
+                  [options]="barChartOptions"
+                  [plugins]="barChartPlugins"
+                  [legend]="barChartLegend"
+                  [chartType]="barChartType"
+                  [colors]="lineChartColors">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-3">
+    <div class="row">
+      <mat-card class="example-card w-100" style="margin-right: 8px">
+        <mat-card-content>
+          <h3 class="mat-title d-inline">Print Orders</h3>
+          <div style="height: 350px;" class="table-responsive" *ngIf="printorders.length > 0">
+            <table mat-table [dataSource]="printorders" class="w-100">
+
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>Code</th>
+                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="more">
+                <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="btn-col">
+                  <button style="border-radius: 5px;" routerLink="/printorders/{{element.id}}" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon> More </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="printordersDervicesDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: printordersDervicesDisplayedColumns;"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+
+  <div class="col-md-12">
+    <mat-card class="example-card">
+      <div class="row">
+        <mat-label>
+          <h3 class="mat-title d-inline">Consume Item Inventory</h3>
+        </mat-label>
+      </div>
+      <mat-card-content>
+        <div style="display: block; width: 900px; ">
+          <canvas class="none-in-print" baseChart
+                  [datasets]="IbarChartData"
+                  [labels]="  IbarChartLabels"
+                  [options]="IbarChartOptions"
+                  [plugins]="IbarChartPlugins"
+                  [legend]="IbarChartLegend"
+                  [chartType]="IbarChartType"
+                  [colors]="IlineChartColors">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

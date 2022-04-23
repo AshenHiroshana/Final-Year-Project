@@ -1,0 +1,129 @@
+<app-no-privilege *ngIf="!privilege.showAll" message="No privilege to show all servicepayments"></app-no-privilege>
+<div *ngIf="privilege.showAll">
+  <app-page-header title="Servicepayments" [breadcrumbSegments]="['Servicepayments', 'Show All Servicepayments']"></app-page-header>
+  <div *ngIf="servicepaymentDataPage!==undefined">
+    <mat-card>
+      <mat-card-content>
+        <div class="mb-2" *ngIf="privilege.add">
+          <button class="mx-0" routerLink="/servicepayments/add" mat-stroked-button><mat-icon>add</mat-icon> New Servicepayment</button>
+        </div>
+        <div class="mb-1">
+          <div class="row">
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field"   appearance="outline">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input  [formGroup]="range" [rangePicker]="picker">
+                  <input matStartDate formControlName="start" placeholder="Start date">
+                  <input (ngModelChange)="loadData()" matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+
+                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Service</mat-label>
+                <mat-select [formControl]="serviceField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Service</mat-option>
+                  <mat-option *ngFor="let service of services" [value]="service.id">{{service.title}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Payment Status</mat-label>
+                <mat-select [formControl]="paymentstatusField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Payment Status</mat-option>
+                  <mat-option *ngFor="let paymentstatus of paymentstatuses" [value]="paymentstatus.id">{{paymentstatus.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <mat-form-field class="w-100 search-form-field" appearance="outline">
+                <mat-label>Filter by Payment Type</mat-label>
+                <mat-select [formControl]="paymenttypeField" (ngModelChange)="loadData()">
+                  <mat-option [value]="null" selected >Any Payment Type</mat-option>
+                  <mat-option *ngFor="let paymenttype of paymenttypes" [value]="paymenttype.id">{{paymenttype.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="servicepaymentDataPage.totalElements > 0">
+          <table mat-table [dataSource]="servicepaymentDataPage.content" class="w-100">
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>Code</th>
+              <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="service">
+              <th mat-header-cell *matHeaderCellDef>Service</th>
+              <td mat-cell *matCellDef="let element"> {{element.service.title}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let element"> {{element.date | date: 'longDate'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
+              <td mat-cell *matCellDef="let element"> {{element.amount | currency :'Rs.'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymentstatus">
+              <th mat-header-cell *matHeaderCellDef>Payment Status</th>
+              <td mat-cell *matCellDef="let element"> {{element.paymentstatus.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="paymenttype">
+              <th mat-header-cell *matHeaderCellDef>Payment Type</th>
+              <td mat-cell *matCellDef="let element"> {{element.paymenttype.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="more-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button routerLink="/servicepayments/{{element.id}}" class="mat-btn-sm" mat-stroked-button><mat-icon>visibility</mat-icon> More ...</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button (click)="delete(element)" class="mat-btn-sm" mat-flat-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update-col">
+              <th class="btn-col" mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="btn-col">
+                <button routerLink="/servicepayments/edit/{{element.id}}" class="mat-btn-sm" mat-flat-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <app-empty-data-table message="No servicepayments to show" *ngIf="servicepaymentDataPage.totalElements === 0"></app-empty-data-table>
+        <div class="mt-1">
+          <mat-paginator
+            [length]="servicepaymentDataPage.totalElements"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 25, 50, 100]"
+            (page)="paginate($event)"
+            [showFirstLastButtons]="true"
+          >
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

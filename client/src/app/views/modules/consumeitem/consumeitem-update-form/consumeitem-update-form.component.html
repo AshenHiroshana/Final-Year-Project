@@ -1,0 +1,113 @@
+<app-no-privilege *ngIf="!privilege.update" message="No privilege to change consumeitem details"></app-no-privilege>
+<div *ngIf="this.consumeitem && privilege.update">
+  <app-page-header
+    title="Consumeitem Change Form of {{ consumeitem.code + ' - ' + consumeitem.name }}"
+    [breadcrumbSegments]="['Consumeitems', 'Show All Consumeitems', 'Change Details of ' + consumeitem.code + ' - ' + consumeitem.name]"
+  ></app-page-header>
+  <form [formGroup]="form" (ngSubmit)="submit()" #ngForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="consumeitemcategory" required>
+                  <mat-option *ngFor="let consumeitemcategory of consumeitemcategories" [value]="consumeitemcategory.id">{{consumeitemcategory.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="consumeitemcategoryField.invalid">
+                  <span *ngIf="consumeitemcategoryField.errors.required">Select at lease one category</span>
+                  <span *ngIf="consumeitemcategoryField.errors.server">{{consumeitemcategoryField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-hint>Ex: Paracetamol</mat-hint>
+                <mat-error *ngIf="nameField.invalid">
+                  <span *ngIf="nameField.errors.required">Name is required</span>
+                  <span *ngIf="nameField.errors.server">{{nameField.errors.server.join(', ')}}</span>
+                  <span *ngIf="nameField.errors.minlength">Name should has at least 3 characters. </span>
+                  <span *ngIf="nameField.errors.maxlength">Name can have a maximum of 255 characters. </span>
+                  <span *ngIf="nameField.errors.pattern">Name is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Unit</mat-label>
+                <mat-select formControlName="unit" required>
+                  <mat-option *ngFor="let unit of units" [value]="unit.id">{{unit.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="unitField.invalid">
+                  <span *ngIf="unitField.errors.required">Select at lease one unit</span>
+                  <span *ngIf="unitField.errors.server">{{unitField.errors.server.join(', ')}}</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>QTY</mat-label>
+                <input type="number" matInput formControlName="qty" required>
+                <mat-hint>Ex: 50</mat-hint>
+                <mat-error *ngIf="qtyField.invalid">
+                  <span *ngIf="qtyField.errors.required">QTY is required</span>
+                  <span *ngIf="qtyField.errors.server">{{qtyField.errors.server.join(', ')}}</span>
+                  <span *ngIf="qtyField.errors.minlength">QTY should be equal or greater than -2147483648</span>
+                  <span *ngIf="qtyField.errors.maxlength">QTY should be equal or less than 2147483647</span>
+                  <span *ngIf="qtyField.errors.pattern">QTY is invalid.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Photo</mat-label>
+            <app-file-chooser placeholder="No choosed photos to show" [min]="0" [max]="1" [accept]="['image/*']" formControlName="photo"></app-file-chooser>
+            <mat-hint>Select any image/* file</mat-hint>
+            <mat-error *ngIf="photoField.invalid">
+              <span *ngIf="photoField.errors.server">{{photoField.errors.server.join(', ')}}</span>
+              <span *ngIf="photoField.errors.min">photo is required</span>
+              <span *ngIf="photoField.errors.max">Maximum allowed photo count is 1</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vendor</mat-label>
+            <app-dual-listbox   placeholder="Add Vendor To Here" [sourceData]="vendors" formControlName="vendors"></app-dual-listbox>
+            <mat-error *ngIf="vendorsField.invalid">
+              <span *ngIf="vendorsField.errors.server">{{vendorsField.errors.server.join(', ')}}</span>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" ></textarea>
+            <mat-hint>Ex: </mat-hint>
+            <mat-error *ngIf="descriptionField.invalid">
+              <span *ngIf="descriptionField.errors.server">{{descriptionField.errors.server.join(', ')}}</span>
+              <span *ngIf="descriptionField.errors.minlength">Description should has at least null characters. </span>
+              <span *ngIf="descriptionField.errors.maxlength">Description can have a maximum of 65535 characters. </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="text-right mt-5 d-flex">
+          <button *ngIf="privilege.showAll" routerLink="/consumeitems" class="ml-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Consumeitems</button>
+          <span class="spacer"></span>
+          <button mat-stroked-button type="button" (click)="discardChanges()"><mat-icon>refresh</mat-icon> Clear</button>
+          <button class="mr-0" mat-flat-button color="primary" type="submit"><mat-icon>save</mat-icon> Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

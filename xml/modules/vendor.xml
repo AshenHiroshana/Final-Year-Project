@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="vendor" to-string-ts="vendor.code + ' - ' + vendor.name" to-string-java="vendor.getCode() + #quat; - #quat; + vendor.getName()">
+
+    <code length="8" prefix="VE" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <varchar-property pattern="^[a-zA-Z ]{3,}$" width="6" basic="yes" exist-on-table="yes" searchable="yes" required="yes" name="name" label="Name" example="Kamal"/>
+        <varchar-property pattern="^[a-zA-Z0-9]{1,}[@][a-zA-Z0-9]{1,}[.][a-zA-Z0-9]{1,}$" width="6" name="email" unique="yes" label="Email Address" example="user@gmail.com" min-length="5"/>
+    </group>
+
+    <group>
+        <char-property width="3" name="primarycontact" label="Primary Contact" example="0112795483" size="10" unique="yes" required="yes" exist-on-table="yes" pattern="^[0][0-9]{9}$" basic="yes" />
+        <char-property width="3" name="secondarycontact" label="Secondary Contact" example="0112795483" size="10" pattern="^[0][0-9]{9}$" />
+        <char-property width="3" name="fax" label="Fax" example="0112795483" size="10" unique="yes"  pattern="^[0][0-9]{9}$" />
+        <reference-property width="3" required="yes" searchable="yes" exist-on-table="yes" name="vendortype" label="Type" referenced-from="vendortype" service-method="getAll" live="no" to-string-java="vendortype.getName()" to-string-ts="vendortype.name"/>
+    </group>
+
+
+    <group>
+        <reference-property insertable="no" required="yes" default-value="1" exist-on-table="yes" width="6" searchable="yes" name="vendorstatus" label="Status" referenced-from="vendorstatus" service-method="getAll" live="no" to-string-ts="vendorstatus.name" to-string-java="vendorstatus.getName()"/>
+        <decimal-property width="6" insertable="no" name="starrate" label="Star Rate" example="3.5" precision="10" scale="2" min="0" max="3"/>
+    </group>
+
+    <text-property name="address" label="Address" example="123, Colombo Road, Gampaha" min-length="4" required="yes"/>
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+

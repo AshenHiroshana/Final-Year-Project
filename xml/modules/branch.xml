@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE regular-module SYSTEM "./../dtd/regular-module.dtd">
+<regular-module name="branch" to-string-ts="branch.code + ' - ' + branch.city" to-string-java="branch.getCode() + #quat; - #quat; + branch.getCity()">
+
+    <code length="8" prefix="BR" searchable="yes" exist-on-table="yes"/>
+
+    <group>
+        <varchar-property width="3" name="city" example="Galle" label="City" basic="yes" exist-on-table="yes" searchable="yes" min-length="2" max-length="45" required="yes"  />
+        <char-property width="3" name="primarycontact" label="Primary Contact" example="0112795483" size="10" unique="yes" required="yes" exist-on-table="yes" pattern="^[0][0-9]{9}$" basic="yes" />
+        <char-property width="3" name="secondarycontact" label="Secondary Contact" example="0112795483" size="10" pattern="^[0][0-9]{9}$" />
+        <char-property width="3" name="fax" label="Fax" example="0112795483" size="10" unique="yes"  pattern="^[0][0-9]{9}$" />
+    </group>
+
+    <file-property name="photo" label="Photo" accept="image/*" exist-on-table="yes" required="yes"/>
+
+    <group>
+        <varchar-property width="4" name="maplink" label="Map link" min-length="4" required="yes" example="Google Map Link"/>
+        <varchar-property pattern="^[a-zA-Z0-9]{1,}[@][a-zA-Z0-9]{1,}[.][a-zA-Z0-9]{1,}$" width="4" name="email" unique="yes" label="Email Address" example="user@gmail.com" min-length="5"/>
+        <reference-property width="4" required="yes" default-value="1" insertable="no" searchable="yes" exist-on-table="yes" name="branchstatus" label="Status" referenced-from="branchstatus" service-method="getAll" live="no" to-string-java="branchstatus.getName()" to-string-ts="branchstatus.name"/>
+    </group>
+
+    <text-property name="address" label="Address" example="123, Colombo Road, Gampaha" min-length="4" required="yes"/>
+    <multiple-file-property name="branchplan" label="Branch Plan"  accept="image/*" max-count="5"/>
+    <text-property name="description" label="Description" example=""/>
+
+
+</regular-module>
+
+
+

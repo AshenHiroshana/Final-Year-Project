@@ -1,0 +1,134 @@
+<app-no-privilege *ngIf="!privilege.showOne" message="No privilege to show more details of a payroll"></app-no-privilege>
+<app-object-not-found *ngIf="loaded && !payroll" message="Payroll Not Found"></app-object-not-found>
+<app-loading *ngIf="!loaded"></app-loading>
+<div *ngIf="payroll && privilege.showOne">
+  <app-page-header
+    title="Payroll Detail Page of {{ payroll.code + ' - ' + payroll.employee.nametitle.name + ' ' + payroll.employee.callingname }}"
+    [breadcrumbSegments]="['Payrolls', 'Show All Payrolls', 'Details of ' + payroll.code + ' - ' + payroll.employee.nametitle.name + ' ' + payroll.employee.callingname]"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Created Date</th>
+                <td>{{payroll.tocreation | date}}</td>
+              </tr>
+              <tr>
+                <th>Created Time</th>
+                <td>{{payroll.tocreation | date: 'shortTime': '+0530'}}</td>
+              </tr>
+              <tr>
+                <th>Creator</th>
+                <td>{{getUserDisplayName(payroll.creator)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="example-card">
+        <mat-card-content>
+          <table class="w-100 table-striped custom-data-table">
+            <tbody>
+              <tr>
+                <th>Code</th>
+                <td>{{payroll.code}}</td>
+              </tr>
+              <tr>
+                <th>Employee</th>
+                <td>{{payroll.employee.nametitle.name + ' ' + payroll.employee.callingname}}</td>
+              </tr>
+              <tr>
+                <th>Appointment</th>
+                <td>{{payroll.appointment.code}}</td>
+              </tr>
+              <tr>
+                <th>Basic Salary</th>
+                <td>{{payroll.basicsalary | currency: 'Rs.'}}</td>
+              </tr>
+              <tr>
+                <th>Epf Amount</th>
+                <td>{{payroll.epfamount | currency: 'Rs.'}}</td>
+              </tr>
+              <tr>
+                <th>Net Salary</th>
+                <td>{{payroll.netsalary | currency: 'Rs.'}}</td>
+              </tr>
+              <tr>
+                <th>Pay Date</th>
+                <td>{{payroll.paydate | date: 'fullDate'}}</td>
+              </tr>
+              <tr>
+                <th>Month</th>
+                <td>{{payroll.month | date: 'fullDate'}}</td>
+              </tr>
+              <tr>
+                <th>Account Number</th>
+                <td>{{payroll.bankaccountno}}</td>
+              </tr>
+              <tr>
+                <th>Bank</th>
+                <td>{{payroll.bankname}}</td>
+              </tr>
+              <tr>
+                <th>Branch</th>
+                <td>{{payroll.bankbranch}}</td>
+              </tr>
+                  <tr>
+                    <td colspan="2">
+                      <table class="w-100 custom-data-table">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let payrolladdition of payroll.payrolladditionList">
+                            <td>{{payrolladdition.title}}</td>
+                            <td>{{payrolladdition.amount}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <table class="w-100 custom-data-table">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let payrolldeduction of payroll.payrolldeductionList">
+                            <td>{{payrolldeduction.title}}</td>
+                            <td>{{payrolldeduction.amount}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+              <tr *ngIf="payroll.description">
+                <th>Description</th>
+                <td [innerHTML]="payroll.description | nl2br"></td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-flex mt-5">
+    <button *ngIf="privilege.delete" (click)="delete()" class="ml-0" mat-raised-button color="warn"><mat-icon>delete</mat-icon> Delete</button>
+    <span class="spacer"></span>
+    <button *ngIf="privilege.update" routerLink="/payrolls/edit/{{payroll.id}}" mat-raised-button color="accent"><mat-icon>edit</mat-icon> Change</button>
+    <button *ngIf="privilege.add" routerLink="/payrolls/add" mat-stroked-button><mat-icon>add</mat-icon> New Payroll</button>
+    <button *ngIf="privilege.showAll" routerLink="/payrolls" class="mr-0" mat-raised-button color="primary"><mat-icon>list</mat-icon> All Payrolls</button>
+  </div>
+</div>

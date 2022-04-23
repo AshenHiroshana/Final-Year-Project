@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE seed SYSTEM "./../dtd/seed.dtd">
+<seed name="billpaymenttype" to-string="{name}">
+    <properties>
+        <varchar-property name="name" size="20"/>
+    </properties>
+    <values>
+        <value><data>Telephone</data></value>
+        <value><data>Internet</data></value>
+        <value><data>Electricity</data></value>
+        <value><data>Water</data></value>
+        <value><data>Other</data></value>
+    </values>
+</seed>
